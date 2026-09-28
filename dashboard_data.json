@@ -1,0 +1,147 @@
+{
+  "generated_at": "2026-09-28T01:41:58.647223+00:00",
+  "assignments": [
+    {
+      "title": "Exp 1 - Discuss and experiment Infrastructure as a Service using Microsoft Azure Compute / Amazon EC2 / Google Compute Engine.",
+      "course_name": "Cloud Application Development",
+      "due_date": "2026-07-20 18:29 UTC",
+      "days_until_due": -69.3,
+      "status": "submitted",
+      "weight": 10,
+      "priority_score": 0
+    },
+    {
+      "title": "Exp 2 - Discuss and experiment Platform as a Service using Microsoft Azure App Service / Amazon Elastic Beanstalk / Google App Engine.",
+      "course_name": "Cloud Application Development",
+      "due_date": "2026-07-31 18:29 UTC",
+      "days_until_due": -58.3,
+      "status": "submitted",
+      "weight": 10,
+      "priority_score": 0
+    },
+    {
+      "title": "Exp 3 - Discuss and experiment Storage as a Service using Azure Blob Storage / Amazon S3, Glaciers / Google Cloud Storage.",
+      "course_name": "Cloud Application Development",
+      "due_date": "2026-08-07 18:29 UTC",
+      "days_until_due": -51.3,
+      "status": "submitted",
+      "weight": 10,
+      "priority_score": 0
+    },
+    {
+      "title": "Exp 4 - Discuss and experiment Database as a Service on SQL databases like Azure SQL / Amazon RDS / Google Cloud SQL.",
+      "course_name": "Cloud Application Development",
+      "due_date": "2026-08-14 18:29 UTC",
+      "days_until_due": -44.3,
+      "status": "submitted",
+      "weight": 10,
+      "priority_score": 0
+    },
+    {
+      "title": "Exp 5 - Implementing Load Balancing and Auto-Scaling Using Azure Virtual Machine Scale Sets / AWS EC2 Auto Scaling Groups /  GCP Managed Instance Groups",
+      "course_name": "Cloud Application Development",
+      "due_date": "2026-08-21 18:29 UTC",
+      "days_until_due": -37.3,
+      "status": "submitted",
+      "weight": 10,
+      "priority_score": 0
+    },
+    {
+      "title": "Mid-Term Exam - Web Application with Cloud Database",
+      "course_name": "Cloud Application Development",
+      "due_date": "2026-09-11 04:59 UTC",
+      "days_until_due": -16.9,
+      "status": "submitted",
+      "weight": 10,
+      "priority_score": 0
+    },
+    {
+      "title": "Exp 7 - Discuss and Experiment Serverless Event-Driven Applications Using AWS Lambda, Azure Functions, and Google Cloud Functions with Cloud-Native Triggers.",
+      "course_name": "Cloud Application Development",
+      "due_date": "2026-09-23 18:29 UTC",
+      "days_until_due": -4.3,
+      "status": "submitted",
+      "weight": 10,
+      "priority_score": 0
+    },
+    {
+      "title": "Mini-Project ( 20 Marks)",
+      "course_name": "Cloud Application Development",
+      "due_date": "2026-10-16 18:29 UTC",
+      "days_until_due": 18.7,
+      "status": "later",
+      "weight": 20,
+      "priority_score": 1.1
+    }
+  ],
+  "pipeline_status": {
+    "google_classroom": {
+      "status": "ok",
+      "assignments_synced": 8,
+      "synced_at": "2026-09-28T01:41:52.134612+00:00"
+    },
+    "aws_pipeline": {
+      "status": "ok",
+      "reminders_sent": 0,
+      "note": "DynamoDB + SNS emulated locally via moto"
+    },
+    "azure_blob": {
+      "status": "ok",
+      "blob_name": "summary_20260928_014157.json",
+      "container": "assignment-reports"
+    }
+  },
+  "history": [
+    {
+      "generated_at": "2026-09-25T14:30:29.452063+00:00",
+      "total_assignments": 8,
+      "reminders_sent": 0,
+      "overdue_count": 7,
+      "upcoming_count": 0,
+      "blob_name": "summary_20260925_143030.json"
+    },
+    {
+      "generated_at": "2026-09-25T14:36:42.681530+00:00",
+      "total_assignments": 8,
+      "reminders_sent": 0,
+      "overdue_count": 7,
+      "upcoming_count": 0,
+      "blob_name": "summary_20260925_143643.json"
+    },
+    {
+      "generated_at": "2026-09-26T05:49:29.002940+00:00",
+      "total_assignments": 8,
+      "reminders_sent": 0,
+      "overdue_count": 7,
+      "upcoming_count": 0,
+      "blob_name": "summary_20260926_054929.json"
+    },
+    {
+      "generated_at": "2026-09-26T05:51:44.177782+00:00",
+      "total_assignments": 8,
+      "submitted_count": 7,
+      "reminders_sent": 0,
+      "overdue_count": 0,
+      "upcoming_count": 0,
+      "blob_name": "summary_20260926_055144.json"
+    },
+    {
+      "generated_at": "2026-09-28T01:41:01.106664+00:00",
+      "total_assignments": 8,
+      "submitted_count": 7,
+      "reminders_sent": 0,
+      "overdue_count": 0,
+      "upcoming_count": 0,
+      "blob_name": "summary_20260928_014101.json"
+    },
+    {
+      "generated_at": "2026-09-28T01:41:56.612592+00:00",
+      "total_assignments": 8,
+      "submitted_count": 7,
+      "reminders_sent": 0,
+      "overdue_count": 0,
+      "upcoming_count": 0,
+      "blob_name": "summary_20260928_014157.json"
+    }
+  ]
+}

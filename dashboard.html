@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Deadline Desk</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0e1220; --panel: #161b2c; --panel-border: #262d44;
+    --text: #f1ede4; --text-dim: #9aa3bd; --text-faint: #656d87;
+    --overdue: #e2574c; --urgent: #f0883e; --upcoming: #e8c34a;
+    --later: #7c8aa3; --submitted: #6fbf8b; --amber-glow: #e8a33d;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); min-height: 100vh;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+  .glow { position: fixed; top: -20%; left: 50%; transform: translateX(-50%); width: 900px; height: 700px;
+    background: radial-gradient(ellipse at center, rgba(232,163,61,0.16) 0%, rgba(232,163,61,0.05) 40%, transparent 70%);
+    pointer-events: none; z-index: 0; }
+  .wrap { position: relative; z-index: 1; max-width: 900px; margin: 0 auto; padding: 56px 24px 80px; }
+  header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 40px; flex-wrap: wrap; gap: 8px; }
+  .brand { font-family: 'Fraunces', Georgia, serif; font-size: 1.25rem; font-weight: 500; }
+  .synced { font-size: 0.85rem; color: var(--text-faint); }
+
+  .hero { text-align: center; margin-bottom: 36px; }
+  .hero-label { font-size: 0.95rem; color: var(--text-dim); margin-bottom: 6px; }
+  .hero-number { font-family: 'Fraunces', Georgia, serif; font-size: clamp(4.5rem, 14vw, 7.5rem); font-weight: 600; line-height: 1;
+    background: linear-gradient(180deg, #fff 0%, var(--amber-glow) 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .hero-sub { font-size: 1.05rem; color: var(--text-dim); margin: 8px auto 0; max-width: 480px; }
+  .hero-sub strong { color: var(--text); font-weight: 600; }
+  .stats { display: flex; gap: 12px; justify-content: center; margin-top: 24px; flex-wrap: wrap; }
+  .stat { background: var(--panel); border: 1px solid var(--panel-border); border-radius: 10px; padding: 12px 20px; min-width: 92px; text-align: center; }
+  .stat-num { font-size: 1.4rem; font-weight: 700; }
+  .stat-label { font-size: 0.75rem; color: var(--text-dim); margin-top: 2px; }
+  .priority-callout { margin: 24px auto 0; max-width: 520px; background: rgba(240,136,62,0.08); border: 1px solid rgba(240,136,62,0.3);
+    border-radius: 12px; padding: 14px 20px; font-size: 0.88rem; color: var(--text-dim); text-align: left; }
+  .priority-callout strong { color: var(--urgent); }
+  .pc-title { color: var(--text); font-weight: 600; }
+
+  .section-title { font-family: 'Fraunces', Georgia, serif; font-size: 1.15rem; font-weight: 500; margin: 0 0 14px; }
+  .panel { background: var(--panel); border: 1px solid var(--panel-border); border-radius: 14px; padding: 22px 26px; margin-bottom: 28px; }
+  .panel-note { font-size: 0.82rem; color: var(--text-dim); margin: -6px 0 12px; line-height: 1.5; }
+
+  .status-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+  .status-card { border: 1px solid var(--panel-border); border-radius: 10px; padding: 14px 16px; background: rgba(255,255,255,0.02); }
+  .status-card-head { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+  .status-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .status-dot.ok { background: var(--submitted); box-shadow: 0 0 8px rgba(111,191,139,0.6); }
+  .status-dot.error { background: var(--overdue); box-shadow: 0 0 8px rgba(226,87,76,0.6); }
+  .status-dot.pending { background: var(--later); }
+  .status-name { font-size: 0.85rem; font-weight: 600; }
+  .status-detail { font-size: 0.78rem; color: var(--text-dim); line-height: 1.4; }
+
+  .bar-row { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+  .bar-row:last-child { margin-bottom: 0; }
+  .bar-label { width: 120px; font-size: 0.82rem; color: var(--text-dim); text-align: right; flex-shrink: 0; }
+  .bar-track { flex: 1; background: rgba(255,255,255,0.04); border-radius: 5px; height: 18px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 5px; transition: width 0.5s ease; }
+  .bar-count { width: 24px; font-size: 0.82rem; font-weight: 600; }
+
+  .trend-svg { display: block; width: 100%; height: auto; }
+
+  .list-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px; }
+  .controls { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+  .filters { display: flex; gap: 6px; flex-wrap: wrap; }
+  .filter-btn { background: transparent; border: 1px solid var(--panel-border); color: var(--text-dim); padding: 6px 14px;
+    border-radius: 999px; font-size: 0.8rem; font-family: inherit; cursor: pointer; transition: border-color 0.15s, color 0.15s, background 0.15s; }
+  .filter-btn:hover { border-color: var(--text-dim); color: var(--text); }
+  .filter-btn.active { background: var(--text); color: var(--bg); border-color: var(--text); font-weight: 600; }
+  .sort-select, .search-input { background: transparent; border: 1px solid var(--panel-border); color: var(--text);
+    padding: 6px 10px; border-radius: 8px; font-size: 0.8rem; font-family: inherit; }
+  .sort-select option { background: var(--panel); color: var(--text); }
+  .search-input { width: 190px; }
+  .search-input::placeholder { color: var(--text-faint); }
+  .refresh-btn { background: transparent; border: 1px solid var(--panel-border); color: var(--text-dim); padding: 6px 14px;
+    border-radius: 8px; font-size: 0.8rem; font-family: inherit; cursor: pointer; }
+  .refresh-btn:hover { color: var(--text); border-color: var(--text-dim); }
+  .search-input:focus-visible, .sort-select:focus-visible, .filter-btn:focus-visible, .refresh-btn:focus-visible {
+    outline: 2px solid var(--amber-glow); outline-offset: 2px; }
+
+  .card { display: flex; align-items: center; gap: 16px; background: var(--panel); border: 1px solid var(--panel-border);
+    border-left: 4px solid var(--later); border-radius: 10px; padding: 16px 18px; margin-bottom: 10px; }
+  .card.status-overdue { border-left-color: var(--overdue); }
+  .card.status-urgent { border-left-color: var(--urgent); }
+  .card.status-upcoming { border-left-color: var(--upcoming); }
+  .card.status-later { border-left-color: var(--later); }
+  .card.status-submitted { border-left-color: var(--submitted); opacity: 0.72; }
+  .card-main { flex: 1; min-width: 0; }
+  .card-title { font-size: 0.95rem; font-weight: 600; margin-bottom: 3px; overflow-wrap: break-word; }
+  .card-meta { font-size: 0.78rem; color: var(--text-faint); }
+  .card-right { text-align: right; flex-shrink: 0; }
+  .card-due { font-size: 0.78rem; color: var(--text-dim); margin-bottom: 4px; }
+  .badge { display: inline-block; font-size: 0.72rem; font-weight: 600; padding: 3px 10px; border-radius: 999px; }
+  .badge.status-overdue { background: rgba(226,87,76,0.15); color: var(--overdue); }
+  .badge.status-urgent { background: rgba(240,136,62,0.15); color: var(--urgent); }
+  .badge.status-upcoming { background: rgba(232,195,74,0.15); color: var(--upcoming); }
+  .badge.status-later { background: rgba(124,138,163,0.15); color: var(--later); }
+  .badge.status-submitted { background: rgba(111,191,139,0.15); color: var(--submitted); }
+
+  .empty, .loader { text-align: center; padding: 48px 20px; color: var(--text-dim); }
+  .empty p, .loader p { max-width: 420px; margin: 0 auto 4px; font-size: 0.9rem; line-height: 1.5; }
+  .empty button { margin-top: 16px; background: var(--amber-glow); color: #1a1305; border: none; padding: 10px 22px;
+    border-radius: 8px; font-family: inherit; font-size: 0.9rem; font-weight: 600; cursor: pointer; }
+  #file-input { display: none; }
+  @media (prefers-reduced-motion: reduce) { .bar-fill { transition: none; } }
+  @media (max-width: 560px) { .card { flex-direction: column; align-items: flex-start; } .card-right { text-align: left; } .bar-label { width: 90px; } }
+</style>
+</head>
+<body>
+<div class="glow"></div>
+<div class="wrap">
+  <header>
+    <div class="brand">Deadline Desk</div>
+    <div class="synced" id="synced-label"></div>
+  </header>
+  <div id="content"><div class="loader"><p>Loading your assignments&hellip;</p></div></div>
+</div>
+<input type="file" id="file-input" accept="application/json">
+
+<script>
+  let allAssignments = [], pipelineStatus = {}, history = [];
+  let activeFilter = 'all', sortMode = 'due', searchQuery = '';
+
+  const STATUS_ORDER = ['overdue', 'urgent', 'upcoming', 'later', 'submitted'];
+  const STATUS_LABELS = { overdue: 'Overdue', urgent: 'Due today/tomorrow', upcoming: 'Due this week', later: 'Later', submitted: 'Submitted' };
+  const PIPELINE_LABELS = {
+    google_classroom: 'Google Classroom',
+    aws_pipeline: 'AWS pipeline (Lambda, DynamoDB, SNS)',
+    azure_blob: 'Azure Blob Storage'
+  };
+
+  function escapeHTML(str) {
+    const div = document.createElement('div');
+    div.textContent = str == null ? '' : String(str);
+    return div.innerHTML;
+  }
+
+  async function loadData() {
+    try {
+      const res = await fetch('dashboard_data.json', { cache: 'no-store' });
+      if (!res.ok) throw new Error('not found');
+      onDataLoaded(await res.json());
+    } catch (e) { showLoadFallback(); }
+  }
+
+  function showLoadFallback() {
+    document.getElementById('content').innerHTML = `
+      <div class="empty">
+        <p>Couldn't load <code>dashboard_data.json</code> automatically. Browsers block this when a page is opened straight from disk.</p>
+        <p>Run <code>python -m http.server</code> in your project folder and open this page at localhost:8000, or choose the file below.</p>
+        <button id="pick-file">Choose dashboard_data.json</button>
+      </div>`;
+    document.getElementById('pick-file').addEventListener('click', () => document.getElementById('file-input').click());
+  }
+
+  document.getElementById('file-input').addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (evt) => {
+      try { onDataLoaded(JSON.parse(evt.target.result)); }
+      catch (err) { alert('That file could not be read as valid JSON.'); }
+    };
+    reader.readAsText(file);
+  });
+
+  function onDataLoaded(data) {
+    allAssignments = data.assignments || [];
+    pipelineStatus = data.pipeline_status || {};
+    history = data.history || [];
+    const synced = new Date(data.generated_at);
+    document.getElementById('synced-label').textContent =
+      'Last synced ' + synced.toLocaleString(undefined, { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
+    render();
+  }
+
+  function getVisible() {
+    const q = searchQuery.trim().toLowerCase();
+    let list = activeFilter === 'all' ? allAssignments : allAssignments.filter(a => a.status === activeFilter);
+    if (q) list = list.filter(a => (a.title || '').toLowerCase().includes(q) || (a.course_name || '').toLowerCase().includes(q));
+    return list.slice().sort((a, b) =>
+      sortMode === 'priority' ? b.priority_score - a.priority_score : a.days_until_due - b.days_until_due);
+  }
+
+  function cardsMarkup() {
+    const visible = getVisible();
+    if (!visible.length) {
+      return `<div class="empty"><p>${searchQuery.trim() ? 'No assignments match that search.' : 'Nothing in this filter.'}</p></div>`;
+    }
+    return visible.map(a => `
+      <div class="card status-${a.status}">
+        <div class="card-main">
+          <div class="card-title">${escapeHTML(a.title)}</div>
+          <div class="card-meta">${escapeHTML(a.course_name)}, ${a.weight} marks${a.status !== 'submitted' ? `, priority ${a.priority_score}` : ''}</div>
+        </div>
+        <div class="card-right">
+          <div class="card-due">${escapeHTML(a.due_date)}</div>
+          <span class="badge status-${a.status}">${STATUS_LABELS[a.status]}</span>
+        </div>
+      </div>`).join('');
+  }
+
+  function renderTrendPanel() {
+    const points = history
+      .filter(h => typeof h.submitted_count === 'number' && typeof h.total_assignments === 'number')
+      .slice(-8)
+      .map(h => ({ pending: h.total_assignments - h.submitted_count, total: h.total_assignments,
+                   submitted: h.submitted_count, date: new Date(h.generated_at) }));
+
+    if (points.length < 2) {
+      return `<div class="panel"><p class="section-title">Progress over time</p>
+        <p class="panel-note">Each pipeline run saves a summary to Azure Blob Storage, and this chart reads them back. Run the pipeline once or twice more to start your trend.</p></div>`;
+    }
+
+    const W = 600, H = 170, padX = 36, padTop = 26, padBottom = 34;
+    const maxVal = Math.max(...points.map(p => p.pending), 1);
+    const step = (W - padX * 2) / (points.length - 1);
+    const xy = points.map((p, i) => ({ x: padX + i * step, y: padTop + (1 - p.pending / maxVal) * (H - padTop - padBottom), p }));
+    const latest = points[points.length - 1];
+    const pct = latest.total ? Math.round(latest.submitted / latest.total * 100) : 0;
+    const label = d => `${d.getMonth() + 1}/${d.getDate()} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
+
+    return `<div class="panel">
+      <p class="section-title">Progress over time</p>
+      <p class="panel-note">Pending assignments per run, read back from Azure Blob Storage. Right now ${latest.submitted} of ${latest.total} are submitted (${pct}%).</p>
+      <svg class="trend-svg" viewBox="0 0 ${W} ${H}" role="img" aria-label="Pending assignments across recent pipeline runs">
+        <polyline points="${xy.map(pt => pt.x + ',' + pt.y).join(' ')}" fill="none" stroke-width="2.5" stroke-linejoin="round" style="stroke:var(--amber-glow)"/>
+        ${xy.map(pt => `
+          <circle cx="${pt.x}" cy="${pt.y}" r="4" style="fill:var(--amber-glow)"/>
+          <text x="${pt.x}" y="${pt.y - 10}" text-anchor="middle" font-size="12" font-weight="600" style="fill:var(--text)">${pt.p.pending}</text>
+          <text x="${pt.x}" y="${H - 10}" text-anchor="middle" font-size="10" style="fill:var(--text-faint)">${label(pt.p.date)}</text>`).join('')}
+      </svg></div>`;
+  }
+
+  function renderPipelinePanel() {
+    return `<div class="panel"><p class="section-title">Cloud pipeline status</p><div class="status-grid">
+      ${Object.keys(PIPELINE_LABELS).map(key => {
+        const s = pipelineStatus[key] || { status: 'pending' };
+        const dot = s.status === 'ok' ? 'ok' : s.status === 'error' ? 'error' : 'pending';
+        let detail = 'Waiting on the last run';
+        if (s.status === 'ok') {
+          if (key === 'google_classroom') detail = `${s.assignments_synced} assignments synced`;
+          if (key === 'aws_pipeline') detail = `${s.reminders_sent} reminder(s) sent this run`;
+          if (key === 'azure_blob') detail = `Uploaded ${escapeHTML(s.blob_name || '')}`;
+        } else if (s.status === 'error') detail = escapeHTML(s.detail || 'Something went wrong');
+        return `<div class="status-card"><div class="status-card-head"><span class="status-dot ${dot}"></span>
+          <span class="status-name">${PIPELINE_LABELS[key]}</span></div><div class="status-detail">${detail}</div></div>`;
+      }).join('')}</div></div>`;
+  }
+
+  function render() {
+    const content = document.getElementById('content');
+    if (!allAssignments.length) {
+      content.innerHTML = `<div class="empty"><p>No assignments found. Run your pipeline to sync from Google Classroom.</p></div>` + renderPipelinePanel();
+      return;
+    }
+
+    const pending = allAssignments.filter(a => a.status !== 'submitted');
+    const nextUp = pending.slice().sort((a, b) => a.days_until_due - b.days_until_due)[0];
+    const topPriority = pending.slice().sort((a, b) => b.priority_score - a.priority_score)[0];
+
+    const counts = {};
+    STATUS_ORDER.forEach(s => counts[s] = 0);
+    allAssignments.forEach(a => counts[a.status] = (counts[a.status] || 0) + 1);
+    const maxCount = Math.max(...Object.values(counts), 1);
+
+    const hero = nextUp ? `
+      <div class="hero">
+        <div class="hero-label">${nextUp.days_until_due < 0 ? 'Most recent overdue item, days late' : 'Next deadline'}</div>
+        <div class="hero-number">${Math.abs(Math.round(nextUp.days_until_due))}</div>
+        <div class="hero-sub">${nextUp.days_until_due < 0 ? 'days past' : 'days until'} <strong>${escapeHTML(nextUp.title)}</strong></div>
+        <div class="stats">
+          <div class="stat"><div class="stat-num">${counts.overdue}</div><div class="stat-label">Overdue</div></div>
+          <div class="stat"><div class="stat-num">${counts.urgent + counts.upcoming}</div><div class="stat-label">Due soon</div></div>
+          <div class="stat"><div class="stat-num">${counts.submitted}</div><div class="stat-label">Submitted</div></div>
+        </div>
+        ${topPriority && topPriority.title !== nextUp.title ? `
+          <div class="priority-callout">Highest priority right now (marks weighed against time left):
+            <span class="pc-title">${escapeHTML(topPriority.title)}</span>,
+            <strong>${topPriority.weight} marks</strong>, due in ${Math.round(topPriority.days_until_due)} day(s).</div>` : ''}
+      </div>` : `
+      <div class="hero">
+        <div class="hero-label">All caught up</div>
+        <div class="hero-number">0</div>
+        <div class="hero-sub">Nothing pending right now.</div>
+        <div class="stats"><div class="stat"><div class="stat-num">${counts.submitted}</div><div class="stat-label">Submitted</div></div></div>
+      </div>`;
+
+    const chart = `<div class="panel"><p class="section-title">Assignments by status</p>
+      ${STATUS_ORDER.map(s => `<div class="bar-row"><div class="bar-label">${STATUS_LABELS[s]}</div>
+        <div class="bar-track"><div class="bar-fill" style="width:${counts[s] / maxCount * 100}%; background:var(--${s})"></div></div>
+        <div class="bar-count">${counts[s]}</div></div>`).join('')}</div>`;
+
+    const header = `<div class="list-header">
+      <div class="section-title" style="margin:0">Assignments</div>
+      <div class="controls">
+        <input type="search" class="search-input" id="search-input" placeholder="Search title or course" aria-label="Search assignments">
+        <select class="sort-select" id="sort-select" aria-label="Sort assignments">
+          <option value="due">Sort by soonest due</option>
+          <option value="priority">Sort by priority score</option>
+        </select>
+        <button class="refresh-btn" id="refresh-btn">Refresh</button>
+      </div></div>
+      <div class="filters" style="margin-bottom:16px">
+        ${['all', ...STATUS_ORDER].map(f => `<button class="filter-btn ${activeFilter === f ? 'active' : ''}" data-filter="${f}">${f === 'all' ? 'All' : STATUS_LABELS[f]}</button>`).join('')}
+      </div>`;
+
+    content.innerHTML = hero + chart + renderTrendPanel() + renderPipelinePanel() + header + `<div id="cards">${cardsMarkup()}</div>`;
+
+    const search = document.getElementById('search-input');
+    search.value = searchQuery;
+    search.addEventListener('input', (e) => { searchQuery = e.target.value; document.getElementById('cards').innerHTML = cardsMarkup(); });
+
+    const sort = document.getElementById('sort-select');
+    sort.value = sortMode;
+    sort.addEventListener('change', (e) => { sortMode = e.target.value; document.getElementById('cards').innerHTML = cardsMarkup(); });
+
+    document.querySelectorAll('.filter-btn').forEach(btn =>
+      btn.addEventListener('click', () => { activeFilter = btn.dataset.filter; render(); }));
+    document.getElementById('refresh-btn').addEventListener('click', loadData);
+  }
+
+  loadData();
+</script>
+</body>
+</html>

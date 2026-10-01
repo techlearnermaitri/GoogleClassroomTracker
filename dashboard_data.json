@@ -1,93 +1,254 @@
 {
-  "generated_at": "2026-09-28T01:41:58.647223+00:00",
+  "generated_at": "2026-10-01T03:05:43.070468+00:00",
   "assignments": [
     {
       "title": "Exp 1 - Discuss and experiment Infrastructure as a Service using Microsoft Azure Compute / Amazon EC2 / Google Compute Engine.",
+      "course_id": "863566662310",
       "course_name": "Cloud Application Development",
       "due_date": "2026-07-20 18:29 UTC",
-      "days_until_due": -69.3,
+      "days_until_due": -72.4,
+      "status": "submitted",
+      "weight": 10,
+      "priority_score": 0
+    },
+    {
+      "title": "Assignment 1: Point Processing",
+      "course_id": "863567057196",
+      "course_name": "Computer Vision and Deep Learning",
+      "due_date": "2026-07-30 18:10 UTC",
+      "days_until_due": -62.4,
       "status": "submitted",
       "weight": 10,
       "priority_score": 0
     },
     {
       "title": "Exp 2 - Discuss and experiment Platform as a Service using Microsoft Azure App Service / Amazon Elastic Beanstalk / Google App Engine.",
+      "course_id": "863566662310",
       "course_name": "Cloud Application Development",
       "due_date": "2026-07-31 18:29 UTC",
-      "days_until_due": -58.3,
+      "days_until_due": -61.4,
+      "status": "submitted",
+      "weight": 10,
+      "priority_score": 0
+    },
+    {
+      "title": "Assignment 1",
+      "course_id": "870758266592",
+      "course_name": "TYBTECH-SEM V-Project Life Cycle Management",
+      "due_date": "2026-08-03 18:29 UTC",
+      "days_until_due": -58.4,
       "status": "submitted",
       "weight": 10,
       "priority_score": 0
     },
     {
       "title": "Exp 3 - Discuss and experiment Storage as a Service using Azure Blob Storage / Amazon S3, Glaciers / Google Cloud Storage.",
+      "course_id": "863566662310",
       "course_name": "Cloud Application Development",
       "due_date": "2026-08-07 18:29 UTC",
-      "days_until_due": -51.3,
+      "days_until_due": -54.4,
+      "status": "submitted",
+      "weight": 10,
+      "priority_score": 0
+    },
+    {
+      "title": "Assignment 2: Neighbourhood Processing",
+      "course_id": "863567057196",
+      "course_name": "Computer Vision and Deep Learning",
+      "due_date": "2026-08-13 05:30 UTC",
+      "days_until_due": -48.9,
+      "status": "submitted",
+      "weight": 10,
+      "priority_score": 0
+    },
+    {
+      "title": "Assignment 2",
+      "course_id": "863569830512",
+      "course_name": "Enterprise Grade Connected Device Application: Self-Driving Cars",
+      "due_date": "2026-08-13 18:29 UTC",
+      "days_until_due": -48.4,
+      "status": "submitted",
+      "weight": 10,
+      "priority_score": 0
+    },
+    {
+      "title": "Assignment 1",
+      "course_id": "863569830512",
+      "course_name": "Enterprise Grade Connected Device Application: Self-Driving Cars",
+      "due_date": "2026-08-13 18:29 UTC",
+      "days_until_due": -48.4,
       "status": "submitted",
       "weight": 10,
       "priority_score": 0
     },
     {
       "title": "Exp 4 - Discuss and experiment Database as a Service on SQL databases like Azure SQL / Amazon RDS / Google Cloud SQL.",
+      "course_id": "863566662310",
       "course_name": "Cloud Application Development",
       "due_date": "2026-08-14 18:29 UTC",
-      "days_until_due": -44.3,
+      "days_until_due": -47.4,
+      "status": "submitted",
+      "weight": 10,
+      "priority_score": 0
+    },
+    {
+      "title": "Assignment 3: Geometric Transformation",
+      "course_id": "863567057196",
+      "course_name": "Computer Vision and Deep Learning",
+      "due_date": "2026-08-19 03:55 UTC",
+      "days_until_due": -43.0,
+      "status": "submitted",
+      "weight": 10,
+      "priority_score": 0
+    },
+    {
+      "title": "YOLO Pracs",
+      "course_id": "863568983745",
+      "course_name": "Emerging Technologies",
+      "due_date": "2026-08-20 18:29 UTC",
+      "days_until_due": -41.4,
+      "status": "submitted",
+      "weight": 10,
+      "priority_score": 0
+    },
+    {
+      "title": "Industrial Connect Tech(CIA-2)",
+      "course_id": "863568983745",
+      "course_name": "Emerging Technologies",
+      "due_date": "2026-08-20 18:29 UTC",
+      "days_until_due": -41.4,
       "status": "submitted",
       "weight": 10,
       "priority_score": 0
     },
     {
       "title": "Exp 5 - Implementing Load Balancing and Auto-Scaling Using Azure Virtual Machine Scale Sets / AWS EC2 Auto Scaling Groups /  GCP Managed Instance Groups",
+      "course_id": "863566662310",
       "course_name": "Cloud Application Development",
       "due_date": "2026-08-21 18:29 UTC",
-      "days_until_due": -37.3,
+      "days_until_due": -40.4,
+      "status": "submitted",
+      "weight": 10,
+      "priority_score": 0
+    },
+    {
+      "title": "CIA 1- Assignment",
+      "course_id": "870758266592",
+      "course_name": "TYBTECH-SEM V-Project Life Cycle Management",
+      "due_date": "2026-08-24 12:29 UTC",
+      "days_until_due": -37.6,
+      "status": "submitted",
+      "weight": 10,
+      "priority_score": 0
+    },
+    {
+      "title": "Assignment 4: Histogram Processing",
+      "course_id": "863567057196",
+      "course_name": "Computer Vision and Deep Learning",
+      "due_date": "2026-08-27 06:29 UTC",
+      "days_until_due": -34.9,
+      "status": "submitted",
+      "weight": 10,
+      "priority_score": 0
+    },
+    {
+      "title": "Assignment 5: Image Segmentation",
+      "course_id": "863567057196",
+      "course_name": "Computer Vision and Deep Learning",
+      "due_date": "2026-09-10 06:15 UTC",
+      "days_until_due": -20.9,
       "status": "submitted",
       "weight": 10,
       "priority_score": 0
     },
     {
       "title": "Mid-Term Exam - Web Application with Cloud Database",
+      "course_id": "863566662310",
       "course_name": "Cloud Application Development",
       "due_date": "2026-09-11 04:59 UTC",
-      "days_until_due": -16.9,
+      "days_until_due": -19.9,
       "status": "submitted",
       "weight": 10,
       "priority_score": 0
     },
     {
       "title": "Exp 7 - Discuss and Experiment Serverless Event-Driven Applications Using AWS Lambda, Azure Functions, and Google Cloud Functions with Cloud-Native Triggers.",
+      "course_id": "863566662310",
       "course_name": "Cloud Application Development",
       "due_date": "2026-09-23 18:29 UTC",
-      "days_until_due": -4.3,
+      "days_until_due": -7.4,
       "status": "submitted",
       "weight": 10,
       "priority_score": 0
     },
     {
+      "title": "Assignment 7: Image Classification",
+      "course_id": "863567057196",
+      "course_name": "Computer Vision and Deep Learning",
+      "due_date": "2026-09-24 06:29 UTC",
+      "days_until_due": -6.9,
+      "status": "submitted",
+      "weight": 10,
+      "priority_score": 0
+    },
+    {
+      "title": "Comparison between TD and MC method",
+      "course_id": "863568775850",
+      "course_name": "TY.BTECH VOYAGER Reinforcement Learning and NLP",
+      "due_date": "2026-09-29 18:29 UTC",
+      "days_until_due": -1.4,
+      "status": "submitted",
+      "weight": 10,
+      "priority_score": 0
+    },
+    {
+      "title": "CIA-1 (Certification)",
+      "course_id": "863568983745",
+      "course_name": "Emerging Technologies",
+      "due_date": "2026-10-05 18:29 UTC",
+      "days_until_due": 4.6,
+      "status": "upcoming",
+      "weight": 10,
+      "priority_score": 2.2
+    },
+    {
       "title": "Mini-Project ( 20 Marks)",
+      "course_id": "863566662310",
       "course_name": "Cloud Application Development",
       "due_date": "2026-10-16 18:29 UTC",
-      "days_until_due": 18.7,
+      "days_until_due": 15.6,
       "status": "later",
       "weight": 20,
-      "priority_score": 1.1
+      "priority_score": 1.3
     }
   ],
   "pipeline_status": {
     "google_classroom": {
       "status": "ok",
-      "assignments_synced": 8,
-      "synced_at": "2026-09-28T01:41:52.134612+00:00"
+      "assignments_synced": 22,
+      "courses_synced": [
+        "Enterprise Grade Connected Device Application: Self-Driving Cars",
+        "TYBTECH-SEM V-Project Life Cycle Management",
+        "Emerging Technologies",
+        "Computer Vision and Deep Learning",
+        "TY.BTECH VOYAGER Reinforcement Learning and NLP",
+        "Cloud Application Development"
+      ],
+      "synced_at": "2026-10-01T03:05:37.117962+00:00"
     },
-    "aws_pipeline": {
+    "firestore": {
       "status": "ok",
+      "assignments_synced": 22,
+      "note": "Real Firestore (Native mode), Firebase Spark plan"
+    },
+    "fcm_notifications": {
+      "status": "pending",
       "reminders_sent": 0,
-      "note": "DynamoDB + SNS emulated locally via moto"
+      "detail": "No device registered yet \u2014 enable reminders on the dashboard"
     },
     "azure_blob": {
       "status": "ok",
-      "blob_name": "summary_20260928_014157.json",
+      "blob_name": "summary_20261001_030541.json",
       "container": "assignment-reports"
     }
   },
@@ -142,6 +303,24 @@
       "overdue_count": 0,
       "upcoming_count": 0,
       "blob_name": "summary_20260928_014157.json"
+    },
+    {
+      "generated_at": "2026-09-29T02:21:36.340680+00:00",
+      "total_assignments": 22,
+      "submitted_count": 20,
+      "reminders_sent": 1,
+      "overdue_count": 0,
+      "upcoming_count": 1,
+      "blob_name": "summary_20260929_022137.json"
+    },
+    {
+      "generated_at": "2026-10-01T03:05:40.398095+00:00",
+      "total_assignments": 23,
+      "submitted_count": 20,
+      "reminders_sent": 0,
+      "overdue_count": 1,
+      "upcoming_count": 1,
+      "blob_name": "summary_20261001_030541.json"
     }
   ]
 }

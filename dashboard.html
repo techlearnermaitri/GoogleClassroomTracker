@@ -7,6 +7,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-messaging-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore-compat.js"></script>
 <style>
   :root {
     --bg: #0e1220; --panel: #161b2c; --panel-border: #262d44;
@@ -21,7 +24,12 @@
     background: radial-gradient(ellipse at center, rgba(232,163,61,0.16) 0%, rgba(232,163,61,0.05) 40%, transparent 70%);
     pointer-events: none; z-index: 0; }
   .wrap { position: relative; z-index: 1; max-width: 900px; margin: 0 auto; padding: 56px 24px 80px; }
-  header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 40px; flex-wrap: wrap; gap: 8px; }
+  header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; flex-wrap: wrap; gap: 10px; }
+  .header-right { display: flex; align-items: center; gap: 14px; }
+  .enable-btn { background: var(--amber-glow); color: #1a1305; border: none; padding: 8px 16px; border-radius: 8px;
+    font-family: inherit; font-size: 0.82rem; font-weight: 600; cursor: pointer; }
+  .enable-btn:disabled { background: rgba(111,191,139,0.2); color: var(--submitted); cursor: default; }
+  .enable-btn:focus-visible { outline: 2px solid var(--amber-glow); outline-offset: 2px; }
   .brand { font-family: 'Fraunces', Georgia, serif; font-size: 1.25rem; font-weight: 500; }
   .synced { font-size: 0.85rem; color: var(--text-faint); }
 
@@ -114,7 +122,10 @@
 <div class="wrap">
   <header>
     <div class="brand">Deadline Desk</div>
-    <div class="synced" id="synced-label"></div>
+    <div class="header-right">
+      <div class="synced" id="synced-label"></div>
+      <button class="enable-btn" id="enable-push-btn">Enable reminders</button>
+    </div>
   </header>
   <div id="content"><div class="loader"><p>Loading your assignments&hellip;</p></div></div>
 </div>
@@ -122,15 +133,75 @@
 
 <script>
   let allAssignments = [], pipelineStatus = {}, history = [];
-  let activeFilter = 'all', sortMode = 'due', searchQuery = '';
+  let activeFilter = 'all', activeCourse = 'all', sortMode = 'due', searchQuery = '';
 
   const STATUS_ORDER = ['overdue', 'urgent', 'upcoming', 'later', 'submitted'];
   const STATUS_LABELS = { overdue: 'Overdue', urgent: 'Due today/tomorrow', upcoming: 'Due this week', later: 'Later', submitted: 'Submitted' };
   const PIPELINE_LABELS = {
-    google_classroom: 'Google Classroom',
-    aws_pipeline: 'AWS pipeline (Lambda, DynamoDB, SNS)',
+    google_classroom: 'Google Classroom (data source)',
+    firestore: 'Firestore (GCP database)',
+    fcm_notifications: 'Firebase Cloud Messaging (reminders)',
     azure_blob: 'Azure Blob Storage'
   };
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyC0TtBJdWZBgI4vxMaQZLUJ1fQO19IMZZw",
+    authDomain: "classroom-deadline-tracker.firebaseapp.com",
+    projectId: "classroom-deadline-tracker",
+    storageBucket: "classroom-deadline-tracker.firebasestorage.app",
+    messagingSenderId: "35280772694",
+    appId: "1:35280772694:web:98cf8fb72940b7ad53e5f7"
+  };
+  const VAPID_KEY = "BMQFk4t6TZkqAcpbw8_WnhjqszfA_66O8tnB5DdlY7ad7prvJleK1k48fwpg7qW5flIXkEiEs4RFtoqIQS_XwKk";
+
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+
+  async function refreshEnableButtonState() {
+    const btn = document.getElementById('enable-push-btn');
+    try {
+      const doc = await db.collection('device_tokens').doc('browser').get();
+      if (doc.exists && Notification.permission === 'granted') {
+        btn.textContent = 'Reminders enabled';
+        btn.disabled = true;
+      }
+    } catch (e) { /* fine to ignore on first load */ }
+  }
+
+  async function enablePush() {
+    const btn = document.getElementById('enable-push-btn');
+    try {
+      const permission = await Notification.requestPermission();
+      if (permission !== 'granted') {
+        alert('Notification permission was not granted, so reminders can\'t be enabled.');
+        return;
+      }
+      const registration = await navigator.serviceWorker.register('firebase-messaging-sw.js');
+      const messaging = firebase.messaging();
+      const token = await messaging.getToken({ vapidKey: VAPID_KEY, serviceWorkerRegistration: registration });
+      if (!token) {
+        alert('Could not get a notification token. Try again in a moment.');
+        return;
+      }
+      await db.collection('device_tokens').doc('browser').set({
+        token, updated_at: new Date().toISOString()
+      });
+      btn.textContent = 'Reminders enabled';
+      btn.disabled = true;
+
+      messaging.onMessage((payload) => {
+        const title = (payload.notification && payload.notification.title) || 'Deadline Desk';
+        const body = (payload.notification && payload.notification.body) || '';
+        new Notification(title, { body });
+      });
+    } catch (e) {
+      console.error(e);
+      alert('Could not enable reminders: ' + e.message);
+    }
+  }
+
+  document.getElementById('enable-push-btn').addEventListener('click', enablePush);
+  refreshEnableButtonState();
 
   function escapeHTML(str) {
     const div = document.createElement('div');
@@ -180,6 +251,7 @@
   function getVisible() {
     const q = searchQuery.trim().toLowerCase();
     let list = activeFilter === 'all' ? allAssignments : allAssignments.filter(a => a.status === activeFilter);
+    if (activeCourse !== 'all') list = list.filter(a => a.course_name === activeCourse);
     if (q) list = list.filter(a => (a.title || '').toLowerCase().includes(q) || (a.course_name || '').toLowerCase().includes(q));
     return list.slice().sort((a, b) =>
       sortMode === 'priority' ? b.priority_score - a.priority_score : a.days_until_due - b.days_until_due);
@@ -243,9 +315,11 @@
         let detail = 'Waiting on the last run';
         if (s.status === 'ok') {
           if (key === 'google_classroom') detail = `${s.assignments_synced} assignments synced`;
-          if (key === 'aws_pipeline') detail = `${s.reminders_sent} reminder(s) sent this run`;
+          if (key === 'firestore') detail = `${s.assignments_synced} documents stored`;
+          if (key === 'fcm_notifications') detail = `${s.reminders_sent} reminder(s) sent this run`;
           if (key === 'azure_blob') detail = `Uploaded ${escapeHTML(s.blob_name || '')}`;
         } else if (s.status === 'error') detail = escapeHTML(s.detail || 'Something went wrong');
+        else if (s.status === 'pending' && s.detail) detail = escapeHTML(s.detail);
         return `<div class="status-card"><div class="status-card-head"><span class="status-dot ${dot}"></span>
           <span class="status-name">${PIPELINE_LABELS[key]}</span></div><div class="status-detail">${detail}</div></div>`;
       }).join('')}</div></div>`;
@@ -294,9 +368,15 @@
         <div class="bar-track"><div class="bar-fill" style="width:${counts[s] / maxCount * 100}%; background:var(--${s})"></div></div>
         <div class="bar-count">${counts[s]}</div></div>`).join('')}</div>`;
 
+    const courseNames = [...new Set(allAssignments.map(a => a.course_name))].sort();
+
     const header = `<div class="list-header">
       <div class="section-title" style="margin:0">Assignments</div>
       <div class="controls">
+        <select class="sort-select" id="course-select" aria-label="Filter by subject">
+          <option value="all">All subjects</option>
+          ${courseNames.map(c => `<option value="${escapeHTML(c)}">${escapeHTML(c)}</option>`).join('')}
+        </select>
         <input type="search" class="search-input" id="search-input" placeholder="Search title or course" aria-label="Search assignments">
         <select class="sort-select" id="sort-select" aria-label="Sort assignments">
           <option value="due">Sort by soonest due</option>
@@ -309,6 +389,10 @@
       </div>`;
 
     content.innerHTML = hero + chart + renderTrendPanel() + renderPipelinePanel() + header + `<div id="cards">${cardsMarkup()}</div>`;
+
+    const courseSelect = document.getElementById('course-select');
+    courseSelect.value = activeCourse;
+    courseSelect.addEventListener('change', (e) => { activeCourse = e.target.value; document.getElementById('cards').innerHTML = cardsMarkup(); });
 
     const search = document.getElementById('search-input');
     search.value = searchQuery;

@@ -6,134 +6,288 @@
 <title>Deadline Desk</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
 <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-messaging-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore-compat.js"></script>
 <style>
   :root {
-    --bg: #0e1220; --panel: #161b2c; --panel-border: #262d44;
-    --text: #f1ede4; --text-dim: #9aa3bd; --text-faint: #656d87;
-    --overdue: #e2574c; --urgent: #f0883e; --upcoming: #e8c34a;
-    --later: #7c8aa3; --submitted: #6fbf8b; --amber-glow: #e8a33d;
+    --bg: #15112a; --panel: #211c3f; --panel-border: #3a3366;
+    --text: #f1ede4; --text-dim: #a79fd1; --text-faint: #6d6596;
+    --overdue: #ff5d73; --urgent: #ff9f43; --upcoming: #ffd93d;
+    --later: #8a84c0; --submitted: #4ade80; --amber-glow: #ffd93d;
+    --font-display: 'Press Start 2P', monospace;
+    --font-body: 'VT323', monospace;
+    --pixel-shadow: 4px 4px 0 rgba(0,0,0,0.5);
+    --pixel-shadow-sm: 2px 2px 0 rgba(0,0,0,0.5);
   }
-  * { box-sizing: border-box; }
+  * { box-sizing: border-box; image-rendering: pixelated; }
+  html { font-size: 18px; }
   body { margin: 0; background: var(--bg); color: var(--text); min-height: 100vh;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
-  .glow { position: fixed; top: -20%; left: 50%; transform: translateX(-50%); width: 900px; height: 700px;
-    background: radial-gradient(ellipse at center, rgba(232,163,61,0.16) 0%, rgba(232,163,61,0.05) 40%, transparent 70%);
+    font-family: var(--font-body); }
+  .glow { position: fixed; top: -20%; left: 60%; transform: translateX(-50%); width: 900px; height: 700px;
+    background: radial-gradient(ellipse at center, rgba(255,217,61,0.10) 0%, rgba(255,217,61,0.03) 40%, transparent 70%);
     pointer-events: none; z-index: 0; }
-  .wrap { position: relative; z-index: 1; max-width: 900px; margin: 0 auto; padding: 56px 24px 80px; }
-  header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; flex-wrap: wrap; gap: 10px; }
-  .header-right { display: flex; align-items: center; gap: 14px; }
-  .enable-btn { background: var(--amber-glow); color: #1a1305; border: none; padding: 8px 16px; border-radius: 8px;
-    font-family: inherit; font-size: 0.82rem; font-weight: 600; cursor: pointer; }
-  .enable-btn:disabled { background: rgba(111,191,139,0.2); color: var(--submitted); cursor: default; }
-  .enable-btn:focus-visible { outline: 2px solid var(--amber-glow); outline-offset: 2px; }
-  .brand { font-family: 'Fraunces', Georgia, serif; font-size: 1.25rem; font-weight: 500; }
-  .synced { font-size: 0.85rem; color: var(--text-faint); }
 
-  .hero { text-align: center; margin-bottom: 36px; }
-  .hero-label { font-size: 0.95rem; color: var(--text-dim); margin-bottom: 6px; }
-  .hero-number { font-family: 'Fraunces', Georgia, serif; font-size: clamp(4.5rem, 14vw, 7.5rem); font-weight: 600; line-height: 1;
-    background: linear-gradient(180deg, #fff 0%, var(--amber-glow) 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
-  .hero-sub { font-size: 1.05rem; color: var(--text-dim); margin: 8px auto 0; max-width: 480px; }
-  .hero-sub strong { color: var(--text); font-weight: 600; }
-  .stats { display: flex; gap: 12px; justify-content: center; margin-top: 24px; flex-wrap: wrap; }
-  .stat { background: var(--panel); border: 1px solid var(--panel-border); border-radius: 10px; padding: 12px 20px; min-width: 92px; text-align: center; }
-  .stat-num { font-size: 1.4rem; font-weight: 700; }
-  .stat-label { font-size: 0.75rem; color: var(--text-dim); margin-top: 2px; }
-  .priority-callout { margin: 24px auto 0; max-width: 520px; background: rgba(240,136,62,0.08); border: 1px solid rgba(240,136,62,0.3);
-    border-radius: 12px; padding: 14px 20px; font-size: 0.88rem; color: var(--text-dim); text-align: left; }
+  .app-shell { position: relative; z-index: 1; display: flex; min-height: 100vh; }
+  .sidebar { width: 210px; flex-shrink: 0; background: var(--panel); border-right: 4px solid var(--panel-border);
+    padding: 24px 12px; display: flex; flex-direction: column; gap: 4px; position: sticky; top: 0; height: 100vh; }
+  .sidebar-brand { font-family: var(--font-display); font-size: 0.7rem; line-height: 1.6; padding: 0 8px; margin-bottom: 26px; color: var(--amber-glow); }
+  .nav-item { display: flex; align-items: center; gap: 9px; background: transparent; border: 2px solid transparent; color: var(--text-dim);
+    padding: 10px 12px; border-radius: 4px; font-family: var(--font-body); font-size: 1.05rem; text-align: left; cursor: pointer; width: 100%; }
+  .nav-item:hover { background: rgba(255,255,255,0.05); color: var(--text); }
+  .nav-item.active { background: rgba(255,217,61,0.12); border-color: var(--amber-glow); color: var(--amber-glow); font-weight: 700; box-shadow: var(--pixel-shadow-sm); }
+
+  .main-area { flex: 1; min-width: 0; }
+  .topbar { position: sticky; top: 0; z-index: 5; background: rgba(21,17,42,0.92); backdrop-filter: blur(4px);
+    border-bottom: 4px solid var(--panel-border); padding: 14px 32px; display: flex; justify-content: flex-end; }
+  .header-right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .enable-btn, .add-task-btn { background: var(--amber-glow); color: #15112a; border: 2px solid #15112a; padding: 8px 14px; border-radius: 4px;
+    font-family: var(--font-body); font-size: 1rem; font-weight: 700; cursor: pointer; box-shadow: var(--pixel-shadow-sm); }
+  .enable-btn:disabled { background: rgba(74,222,128,0.2); color: var(--submitted); cursor: default; box-shadow: none; }
+  .enable-btn:focus-visible, .add-task-btn:focus-visible { outline: 2px solid var(--amber-glow); outline-offset: 2px; }
+  .enable-btn:active, .add-task-btn:active { transform: translate(2px, 2px); box-shadow: none; }
+  .synced { font-size: 0.95rem; color: var(--text-faint); }
+
+  .gami-pill { display: flex; align-items: center; gap: 6px; background: var(--bg); border: 2px solid var(--panel-border);
+    border-radius: 4px; padding: 6px 12px; font-size: 0.95rem; font-weight: 700; }
+  .gami-pill.xp { color: var(--amber-glow); }
+  .gami-pill.streak { color: var(--urgent); }
+  .gami-pill.level { color: var(--submitted); }
+
+  .page-content { max-width: 960px; margin: 0 auto; padding: 32px 24px 80px; }
+  .page { display: none; }
+  .page.active { display: block; }
+
+  .greeting-card { margin-bottom: 20px; }
+  .greeting-title { font-family: var(--font-display); font-size: 1.1rem; color: var(--text); margin-bottom: 6px; line-height: 1.5; }
+  .greeting-sub { font-size: 1.15rem; color: var(--text-dim); }
+
+  .stat-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; margin-bottom: 24px; }
+  .stat-card { background: var(--panel); border: 3px solid var(--panel-border); border-radius: 4px; padding: 14px 16px; box-shadow: var(--pixel-shadow); }
+  .stat-card-label { font-family: var(--font-display); font-size: 0.6rem; color: var(--text-dim); margin-bottom: 8px; line-height: 1.4; }
+  .stat-card-value { font-family: var(--font-display); font-size: 1rem; color: var(--text); }
+  .xp-bar { font-family: monospace; letter-spacing: -1px; font-size: 1rem; color: var(--amber-glow); margin-top: 8px; }
+
+  .section-title { font-family: var(--font-display); font-size: 0.85rem; font-weight: 400; margin: 0 0 14px; color: var(--text); line-height: 1.6; }
+  .panel { background: var(--panel); border: 3px solid var(--panel-border); border-radius: 4px; padding: 20px 24px; margin-bottom: 20px; box-shadow: var(--pixel-shadow); }
+  .panel-note { font-size: 1.05rem; color: var(--text-dim); margin: -4px 0 10px; line-height: 1.5; }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  @media (max-width: 720px) { .two-col { grid-template-columns: 1fr; } }
+
+  .quest-card { display: flex; justify-content: space-between; align-items: center; gap: 14px;
+    background: var(--bg); border: 2px solid var(--panel-border); border-left: 5px solid var(--urgent);
+    border-radius: 4px; padding: 14px 16px; margin-bottom: 10px; }
+  .quest-card-title { font-size: 1.15rem; font-weight: 700; margin-bottom: 2px; }
+  .quest-card-sub { font-size: 0.95rem; color: var(--text-faint); }
+  .quest-card-right { text-align: right; flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+  .quest-xp { font-family: var(--font-display); font-size: 0.65rem; color: var(--amber-glow); }
+  .via-classroom { font-size: 0.9rem; color: var(--text-faint); font-style: italic; }
+
+  .next-deadline-card .next-title { font-size: 1.4rem; font-weight: 700; margin-bottom: 2px; }
+  .next-deadline-card .next-sub { font-size: 1.05rem; color: var(--text-dim); margin-bottom: 10px; }
+  .next-deadline-card .next-due { font-size: 1.05rem; color: var(--text); margin-bottom: 4px; }
+  .next-deadline-card .next-xp { font-family: var(--font-display); font-size: 0.7rem; color: var(--amber-glow); margin-bottom: 16px; }
+  .focus-start-btn { display: block; width: 100%; background: var(--submitted); color: #0c2615; border: 2px solid #0c2615;
+    border-radius: 4px; padding: 11px; font-family: var(--font-display); font-size: 0.65rem; cursor: pointer; box-shadow: var(--pixel-shadow-sm); }
+  .focus-start-btn:active { transform: translate(2px, 2px); box-shadow: none; }
+
+  .upcoming-row { display: flex; align-items: center; gap: 12px; padding: 7px 0; border-bottom: 1px solid var(--panel-border); font-size: 1.1rem; }
+  .upcoming-row:last-of-type { border-bottom: none; }
+  .upcoming-date { color: var(--text-faint); width: 48px; flex-shrink: 0; }
+  .upcoming-title { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .upcoming-xp { color: var(--amber-glow); font-weight: 700; flex-shrink: 0; }
+
+  .overdue-panel { border-color: var(--overdue); }
+  .recent-achievement { border-color: var(--amber-glow); }
+  .recent-ach-name { font-family: var(--font-display); font-size: 0.9rem; color: var(--amber-glow); }
+
+  .quest-group-label { font-family: var(--font-display); font-size: 0.65rem; color: var(--text-dim); margin: 18px 0 10px; }
+  .quest-group-label:first-child { margin-top: 0; }
+
+  .hero { text-align: center; margin-bottom: 30px; }
+  .hero-label { font-family: var(--font-display); font-size: 0.65rem; color: var(--text-dim); margin-bottom: 10px; }
+  .hero-number { font-family: var(--font-display); font-size: clamp(3rem, 10vw, 5rem); color: var(--amber-glow); line-height: 1; }
+  .hero-sub { font-size: 1.2rem; color: var(--text-dim); margin: 10px auto 0; max-width: 480px; }
+  .hero-sub strong { color: var(--text); font-weight: 700; }
+  .priority-callout { margin: 20px auto 0; max-width: 540px; background: rgba(255,159,67,0.1); border: 2px solid var(--urgent);
+    border-radius: 4px; padding: 12px 18px; font-size: 1.05rem; color: var(--text-dim); text-align: left; }
   .priority-callout strong { color: var(--urgent); }
-  .pc-title { color: var(--text); font-weight: 600; }
-
-  .section-title { font-family: 'Fraunces', Georgia, serif; font-size: 1.15rem; font-weight: 500; margin: 0 0 14px; }
-  .panel { background: var(--panel); border: 1px solid var(--panel-border); border-radius: 14px; padding: 22px 26px; margin-bottom: 28px; }
-  .panel-note { font-size: 0.82rem; color: var(--text-dim); margin: -6px 0 12px; line-height: 1.5; }
+  .pc-title { color: var(--text); font-weight: 700; }
 
   .status-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
-  .status-card { border: 1px solid var(--panel-border); border-radius: 10px; padding: 14px 16px; background: rgba(255,255,255,0.02); }
+  .status-card { border: 2px solid var(--panel-border); border-radius: 4px; padding: 14px 16px; background: var(--bg); }
   .status-card-head { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
-  .status-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-  .status-dot.ok { background: var(--submitted); box-shadow: 0 0 8px rgba(111,191,139,0.6); }
-  .status-dot.error { background: var(--overdue); box-shadow: 0 0 8px rgba(226,87,76,0.6); }
+  .status-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+  .status-dot.ok { background: var(--submitted); box-shadow: 0 0 8px rgba(74,222,128,0.7); }
+  .status-dot.error { background: var(--overdue); box-shadow: 0 0 8px rgba(255,93,115,0.7); }
   .status-dot.pending { background: var(--later); }
-  .status-name { font-size: 0.85rem; font-weight: 600; }
-  .status-detail { font-size: 0.78rem; color: var(--text-dim); line-height: 1.4; }
+  .status-name { font-size: 1.05rem; font-weight: 700; }
+  .status-detail { font-size: 1rem; color: var(--text-dim); line-height: 1.4; }
 
   .bar-row { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
   .bar-row:last-child { margin-bottom: 0; }
-  .bar-label { width: 120px; font-size: 0.82rem; color: var(--text-dim); text-align: right; flex-shrink: 0; }
-  .bar-track { flex: 1; background: rgba(255,255,255,0.04); border-radius: 5px; height: 18px; overflow: hidden; }
-  .bar-fill { height: 100%; border-radius: 5px; transition: width 0.5s ease; }
-  .bar-count { width: 24px; font-size: 0.82rem; font-weight: 600; }
+  .bar-label { width: 130px; font-size: 1rem; color: var(--text-dim); text-align: right; flex-shrink: 0; }
+  .bar-track { flex: 1; background: var(--bg); border: 2px solid var(--panel-border); border-radius: 3px; height: 18px; overflow: hidden; }
+  .bar-fill { height: 100%; transition: width 0.5s ease; }
+  .bar-count { width: 24px; font-size: 1rem; font-weight: 700; }
 
   .trend-svg { display: block; width: 100%; height: auto; }
 
   .list-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px; }
   .controls { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
   .filters { display: flex; gap: 6px; flex-wrap: wrap; }
-  .filter-btn { background: transparent; border: 1px solid var(--panel-border); color: var(--text-dim); padding: 6px 14px;
-    border-radius: 999px; font-size: 0.8rem; font-family: inherit; cursor: pointer; transition: border-color 0.15s, color 0.15s, background 0.15s; }
+  .filter-btn { background: var(--bg); border: 2px solid var(--panel-border); color: var(--text-dim); padding: 6px 14px;
+    border-radius: 4px; font-size: 0.95rem; font-family: var(--font-body); cursor: pointer; }
   .filter-btn:hover { border-color: var(--text-dim); color: var(--text); }
-  .filter-btn.active { background: var(--text); color: var(--bg); border-color: var(--text); font-weight: 600; }
-  .sort-select, .search-input { background: transparent; border: 1px solid var(--panel-border); color: var(--text);
-    padding: 6px 10px; border-radius: 8px; font-size: 0.8rem; font-family: inherit; }
+  .filter-btn.active { background: var(--amber-glow); color: var(--bg); border-color: var(--amber-glow); font-weight: 700; }
+  .sort-select, .search-input { background: var(--bg); border: 2px solid var(--panel-border); color: var(--text);
+    padding: 6px 10px; border-radius: 4px; font-size: 0.95rem; font-family: var(--font-body); }
   .sort-select option { background: var(--panel); color: var(--text); }
   .search-input { width: 190px; }
   .search-input::placeholder { color: var(--text-faint); }
-  .refresh-btn { background: transparent; border: 1px solid var(--panel-border); color: var(--text-dim); padding: 6px 14px;
-    border-radius: 8px; font-size: 0.8rem; font-family: inherit; cursor: pointer; }
+  .refresh-btn { background: var(--bg); border: 2px solid var(--panel-border); color: var(--text-dim); padding: 6px 14px;
+    border-radius: 4px; font-size: 0.95rem; font-family: var(--font-body); cursor: pointer; }
   .refresh-btn:hover { color: var(--text); border-color: var(--text-dim); }
   .search-input:focus-visible, .sort-select:focus-visible, .filter-btn:focus-visible, .refresh-btn:focus-visible {
     outline: 2px solid var(--amber-glow); outline-offset: 2px; }
 
-  .card { display: flex; align-items: center; gap: 16px; background: var(--panel); border: 1px solid var(--panel-border);
-    border-left: 4px solid var(--later); border-radius: 10px; padding: 16px 18px; margin-bottom: 10px; }
+  .card { display: flex; align-items: center; gap: 16px; background: var(--bg); border: 2px solid var(--panel-border);
+    border-left: 5px solid var(--later); border-radius: 4px; padding: 14px 16px; margin-bottom: 10px; }
   .card.status-overdue { border-left-color: var(--overdue); }
   .card.status-urgent { border-left-color: var(--urgent); }
   .card.status-upcoming { border-left-color: var(--upcoming); }
   .card.status-later { border-left-color: var(--later); }
-  .card.status-submitted { border-left-color: var(--submitted); opacity: 0.72; }
+  .card.status-submitted { border-left-color: var(--submitted); opacity: 0.65; }
   .card-main { flex: 1; min-width: 0; }
-  .card-title { font-size: 0.95rem; font-weight: 600; margin-bottom: 3px; overflow-wrap: break-word; }
-  .card-meta { font-size: 0.78rem; color: var(--text-faint); }
-  .card-right { text-align: right; flex-shrink: 0; }
-  .card-due { font-size: 0.78rem; color: var(--text-dim); margin-bottom: 4px; }
-  .badge { display: inline-block; font-size: 0.72rem; font-weight: 600; padding: 3px 10px; border-radius: 999px; }
-  .badge.status-overdue { background: rgba(226,87,76,0.15); color: var(--overdue); }
-  .badge.status-urgent { background: rgba(240,136,62,0.15); color: var(--urgent); }
-  .badge.status-upcoming { background: rgba(232,195,74,0.15); color: var(--upcoming); }
-  .badge.status-later { background: rgba(124,138,163,0.15); color: var(--later); }
-  .badge.status-submitted { background: rgba(111,191,139,0.15); color: var(--submitted); }
+  .card-title { font-size: 1.15rem; font-weight: 700; margin-bottom: 2px; overflow-wrap: break-word; }
+  .card-meta { font-size: 0.95rem; color: var(--text-faint); }
+  .card-right { text-align: right; flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+  .card-due { font-size: 0.95rem; color: var(--text-dim); }
+  .badge { display: inline-block; font-size: 0.85rem; font-weight: 700; padding: 3px 10px; border-radius: 4px; border: 1px solid; }
+  .badge.status-overdue { background: rgba(255,93,115,0.15); color: var(--overdue); border-color: var(--overdue); }
+  .badge.status-urgent { background: rgba(255,159,67,0.15); color: var(--urgent); border-color: var(--urgent); }
+  .badge.status-upcoming { background: rgba(255,217,61,0.15); color: var(--upcoming); border-color: var(--upcoming); }
+  .badge.status-later { background: rgba(138,132,192,0.15); color: var(--later); border-color: var(--later); }
+  .badge.status-submitted { background: rgba(74,222,128,0.15); color: var(--submitted); border-color: var(--submitted); }
+  .complete-btn { background: var(--submitted); border: 2px solid #0c2615; color: #0c2615; padding: 5px 14px;
+    border-radius: 4px; font-size: 0.9rem; font-family: var(--font-body); font-weight: 700; cursor: pointer; box-shadow: var(--pixel-shadow-sm); }
+  .complete-btn:active { transform: translate(2px, 2px); box-shadow: none; }
 
   .empty, .loader { text-align: center; padding: 48px 20px; color: var(--text-dim); }
-  .empty p, .loader p { max-width: 420px; margin: 0 auto 4px; font-size: 0.9rem; line-height: 1.5; }
-  .empty button { margin-top: 16px; background: var(--amber-glow); color: #1a1305; border: none; padding: 10px 22px;
-    border-radius: 8px; font-family: inherit; font-size: 0.9rem; font-weight: 600; cursor: pointer; }
+  .empty p, .loader p { max-width: 420px; margin: 0 auto 4px; font-size: 1.1rem; line-height: 1.5; }
+  .empty button { margin-top: 16px; background: var(--amber-glow); color: var(--bg); border: 2px solid var(--bg); padding: 10px 22px;
+    border-radius: 4px; font-family: var(--font-body); font-size: 1.05rem; font-weight: 700; cursor: pointer; }
   #file-input { display: none; }
-  @media (prefers-reduced-motion: reduce) { .bar-fill { transition: none; } }
-  @media (max-width: 560px) { .card { flex-direction: column; align-items: flex-start; } .card-right { text-align: left; } .bar-label { width: 90px; } }
+
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 20;
+    align-items: center; justify-content: center; padding: 20px; }
+  .modal-overlay.open { display: flex; }
+  .modal { background: var(--panel); border: 3px solid var(--panel-border); border-radius: 4px; padding: 24px; width: 100%; max-width: 380px; box-shadow: var(--pixel-shadow); }
+  .modal h3 { font-family: var(--font-display); font-size: 0.85rem; margin: 0 0 18px; }
+  .modal label { display: block; font-size: 0.95rem; color: var(--text-dim); margin: 12px 0 5px; }
+  .modal input { width: 100%; background: var(--bg); border: 2px solid var(--panel-border); color: var(--text);
+    padding: 8px 10px; border-radius: 4px; font-family: var(--font-body); font-size: 1.05rem; }
+  .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
+  .modal-actions button { flex: 1; padding: 9px; border-radius: 4px; font-family: var(--font-body); font-size: 1rem; font-weight: 700; cursor: pointer; }
+  .modal-cancel { background: var(--bg); border: 2px solid var(--panel-border); color: var(--text-dim); }
+  .modal-submit { background: var(--amber-glow); border: 2px solid var(--bg); color: var(--bg); }
+
+  #xp-toast-container { position: fixed; top: 18px; right: 18px; z-index: 30; display: flex; flex-direction: column; gap: 8px; align-items: flex-end; }
+  .xp-toast { background: var(--panel); border: 2px solid var(--amber-glow); color: var(--amber-glow); padding: 10px 16px;
+    border-radius: 4px; font-family: var(--font-body); font-weight: 700; font-size: 1.05rem; box-shadow: var(--pixel-shadow-sm);
+    animation: toastIn 0.25s ease, toastOut 0.35s ease 2.25s forwards; }
+
+  @keyframes toastIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes toastOut { to { opacity: 0; transform: translateY(-8px); } }
+  @media (prefers-reduced-motion: reduce) { .bar-fill, .xp-toast { transition: none; animation: none; } }
+
+  .focus-panel { max-width: 460px; margin: 0 auto; text-align: center; }
+  .timer-display { font-family: var(--font-display); font-size: 3rem; color: var(--amber-glow); margin: 20px 0; }
+  .timer-controls { display: flex; gap: 10px; }
+  .timer-controls button { flex: 1; padding: 10px; font-family: var(--font-body); font-size: 1.05rem; font-weight: 700;
+    border-radius: 4px; cursor: pointer; }
+
+  @media (max-width: 860px) {
+    .app-shell { flex-direction: column; }
+    .sidebar { width: 100%; height: auto; position: static; flex-direction: row; overflow-x: auto; padding: 10px; gap: 6px; border-right: none; border-bottom: 4px solid var(--panel-border); }
+    .sidebar-brand { display: none; }
+    .nav-item { width: auto; white-space: nowrap; }
+  }
+  @media (max-width: 560px) {
+    .card, .quest-card { flex-direction: column; align-items: flex-start; }
+    .card-right, .quest-card-right { align-items: flex-start; }
+    .bar-label { width: 90px; }
+    .topbar { padding: 14px 18px; justify-content: center; }
+  }
 </style>
 </head>
 <body>
 <div class="glow"></div>
-<div class="wrap">
-  <header>
-    <div class="brand">Deadline Desk</div>
-    <div class="header-right">
-      <div class="synced" id="synced-label"></div>
-      <button class="enable-btn" id="enable-push-btn">Enable reminders</button>
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="sidebar-brand">DEADLINE<br>DESK</div>
+    <nav>
+      <button class="nav-item active" data-page="dashboard">🏠 Dashboard</button>
+      <button class="nav-item" data-page="quest">📜 Quest Board</button>
+      <button class="nav-item" data-page="focus">⏱ Focus Mode</button>
+      <button class="nav-item" data-page="achievements">🏆 Achievements</button>
+    </nav>
+  </aside>
+
+  <div class="main-area">
+    <div class="topbar">
+      <div class="header-right">
+        <span class="gami-pill level" id="level-pill">🏅 LV 1</span>
+        <span class="gami-pill xp" id="xp-pill">⭐ 0 XP</span>
+        <span class="gami-pill streak" id="streak-pill">🔥 0</span>
+        <div class="synced" id="synced-label"></div>
+        <button class="add-task-btn" id="add-task-btn">+ ADD TASK</button>
+        <button class="enable-btn" id="enable-push-btn">ENABLE REMINDERS</button>
+      </div>
     </div>
-  </header>
-  <div id="content"><div class="loader"><p>Loading your assignments&hellip;</p></div></div>
+
+    <div class="page-content">
+      <div class="page active" id="page-dashboard"><div class="loader"><p>Loading your quests&hellip;</p></div></div>
+      <div class="page" id="page-quest"></div>
+      <div class="page" id="page-focus"></div>
+      <div class="page" id="page-achievements"></div>
+    </div>
+  </div>
 </div>
+
 <input type="file" id="file-input" accept="application/json">
+<div id="xp-toast-container"></div>
+
+<div class="modal-overlay" id="task-modal">
+  <div class="modal">
+    <h3>Add a task</h3>
+    <label for="task-title">Title</label>
+    <input type="text" id="task-title" placeholder="e.g. Revise DBMS chapter 3">
+    <label for="task-subject">Subject / category</label>
+    <input type="text" id="task-subject" placeholder="e.g. DBMS">
+    <label for="task-date">Due date</label>
+    <input type="date" id="task-date">
+    <label for="task-time">Due time</label>
+    <input type="time" id="task-time" value="23:59">
+    <label for="task-xp">XP / marks</label>
+    <input type="number" id="task-xp" value="10" min="1">
+    <div class="modal-actions">
+      <button class="modal-cancel" id="task-cancel">Cancel</button>
+      <button class="modal-submit" id="task-submit">Add task</button>
+    </div>
+  </div>
+</div>
 
 <script>
-  let allAssignments = [], pipelineStatus = {}, history = [];
+  let baseAssignments = [], customTasks = [], allAssignments = [], pipelineStatus = {}, history = [];
   let activeFilter = 'all', activeCourse = 'all', sortMode = 'due', searchQuery = '';
+  let gamiData = { xp: 0, streak: 0, completed_count: 0, overdue_cleared: 0, achievements_log: [] };
+  let unlockedBadgeIds = new Set();
+  let gamiLoadedOnce = false;
+  let focusPreset = null;
+  let timerSeconds = 25 * 60, timerInterval = null, timerRunning = false;
 
   const STATUS_ORDER = ['overdue', 'urgent', 'upcoming', 'later', 'submitted'];
   const STATUS_LABELS = { overdue: 'Overdue', urgent: 'Due today/tomorrow', upcoming: 'Due this week', later: 'Later', submitted: 'Submitted' };
@@ -143,6 +297,14 @@
     fcm_notifications: 'Firebase Cloud Messaging (reminders)',
     azure_blob: 'Azure Blob Storage'
   };
+  const ACHIEVEMENTS = [
+    { id: 'first_quest', icon: '🎯', name: 'First Quest', desc: 'Complete your first task', check: d => (d.completed_count || 0) >= 1 },
+    { id: 'on_fire', icon: '🔥', name: 'On Fire', desc: 'Reach a 3-day streak', check: d => (d.streak || 0) >= 3 },
+    { id: 'week_warrior', icon: '🌟', name: 'Week Warrior', desc: 'Reach a 7-day streak', check: d => (d.streak || 0) >= 7 },
+    { id: 'centurion', icon: '🏅', name: 'Centurion', desc: 'Earn 100 XP', check: d => (d.xp || 0) >= 100 },
+    { id: 'grandmaster', icon: '👑', name: 'Grandmaster', desc: 'Earn 500 XP', check: d => (d.xp || 0) >= 500 },
+    { id: 'deadline_slayer', icon: '⚔️', name: 'Deadline Slayer', desc: 'Complete a task after it went overdue', check: d => (d.overdue_cleared || 0) >= 1 }
+  ];
 
   const firebaseConfig = {
     apiKey: "AIzaSyC0TtBJdWZBgI4vxMaQZLUJ1fQO19IMZZw",
@@ -156,13 +318,54 @@
 
   firebase.initializeApp(firebaseConfig);
   const db = firebase.firestore();
+  const customTasksRef = db.collection('custom_tasks');
+  const gamificationRef = db.collection('gamification').doc('profile');
 
+  // --- Sidebar navigation ---
+  function goToPage(name) {
+    document.querySelectorAll('.nav-item').forEach(b => b.classList.toggle('active', b.dataset.page === name));
+    document.querySelectorAll('.page').forEach(p => p.classList.toggle('active', p.id === 'page-' + name));
+  }
+  document.querySelectorAll('.nav-item').forEach(btn => {
+    btn.addEventListener('click', () => {
+      goToPage(btn.dataset.page);
+      if (btn.dataset.page === 'focus') renderFocusPage();
+    });
+  });
+
+  // --- Toasts ---
+  function showToast(text) {
+    const container = document.getElementById('xp-toast-container');
+    const el = document.createElement('div');
+    el.className = 'xp-toast';
+    el.textContent = text;
+    container.appendChild(el);
+    setTimeout(() => el.remove(), 2600);
+  }
+
+  // --- Greeting ---
+  function getGreeting() {
+    const h = new Date().getHours();
+    if (h < 12) return 'Good morning';
+    if (h < 18) return 'Good afternoon';
+    return 'Good evening';
+  }
+  function getUserName() {
+    let name = localStorage.getItem('dd_name');
+    if (!name) {
+      name = (prompt('What should we call you?', '') || 'Adventurer').trim() || 'Adventurer';
+      localStorage.setItem('dd_name', name);
+    }
+    return name;
+  }
+
+  // --- Notifications (unchanged) ---
   async function refreshEnableButtonState() {
     const btn = document.getElementById('enable-push-btn');
     try {
       const doc = await db.collection('device_tokens').doc('browser').get();
       if (doc.exists && Notification.permission === 'granted') {
-        btn.textContent = 'Reminders enabled';
+        btn.textContent = 'REMINDERS ON';
         btn.disabled = true;
       }
     } catch (e) { /* fine to ignore on first load */ }
@@ -183,10 +386,8 @@
         alert('Could not get a notification token. Try again in a moment.');
         return;
       }
-      await db.collection('device_tokens').doc('browser').set({
-        token, updated_at: new Date().toISOString()
-      });
-      btn.textContent = 'Reminders enabled';
+      await db.collection('device_tokens').doc('browser').set({ token, updated_at: new Date().toISOString() });
+      btn.textContent = 'REMINDERS ON';
       btn.disabled = true;
 
       messaging.onMessage((payload) => {
@@ -203,10 +404,196 @@
   document.getElementById('enable-push-btn').addEventListener('click', enablePush);
   refreshEnableButtonState();
 
+  // --- Gamification: XP, streak, level, achievements — all live from Firestore ---
+  function computeLevel(xp) {
+    return Math.floor((xp || 0) / 100) + 1; // Level 1 at 0 XP, one level per 100 XP
+  }
+
+  function updateGamiUI(data) {
+    const xp = data.xp || 0;
+    document.getElementById('xp-pill').textContent = `⭐ ${xp} XP`;
+    document.getElementById('streak-pill').textContent = `🔥 ${data.streak || 0}`;
+    document.getElementById('level-pill').textContent = `🏅 LV ${computeLevel(xp)}`;
+  }
+
+  function checkAchievementUnlocks(data) {
+    const log = data.achievements_log || [];
+    ACHIEVEMENTS.forEach(a => {
+      const earned = a.check(data);
+      if (earned && !unlockedBadgeIds.has(a.id)) {
+        unlockedBadgeIds.add(a.id);
+        if (gamiLoadedOnce) showToast(`🏆 Achievement unlocked: ${a.name}`);
+        if (!log.includes(a.id)) {
+          gamificationRef.set({ achievements_log: firebase.firestore.FieldValue.arrayUnion(a.id) }, { merge: true }).catch(e => console.warn(e));
+        }
+      }
+    });
+  }
+
+  function renderAchievementsPage() {
+    const el = document.getElementById('page-achievements');
+    if (!el) return;
+    el.innerHTML = `<p class="section-title">🏆 Achievements</p>
+      <p class="panel-note">${unlockedBadgeIds.size} of ${ACHIEVEMENTS.length} unlocked.</p>
+      <div class="status-grid">
+        ${ACHIEVEMENTS.map(a => {
+          const unlocked = a.check(gamiData);
+          return `<div class="status-card" style="opacity:${unlocked ? '1' : '0.4'}">
+            <div class="status-card-head"><span style="font-size:1.4rem">${a.icon}</span>
+              <span class="status-name">${a.name.toUpperCase()}</span></div>
+            <div class="status-detail">${a.desc} — ${unlocked ? 'UNLOCKED' : 'LOCKED'}</div>
+          </div>`;
+        }).join('')}
+      </div>`;
+  }
+
+  gamificationRef.onSnapshot(
+    (doc) => {
+      gamiData = doc.exists ? doc.data() : { xp: 0, streak: 0, completed_count: 0, overdue_cleared: 0, achievements_log: [] };
+      updateGamiUI(gamiData);
+      checkAchievementUnlocks(gamiData);
+      renderAchievementsPage();
+      renderDashboardPage();
+      gamiLoadedOnce = true;
+    },
+    (err) => console.warn('Gamification listener error', err)
+  );
+
+  async function awardXP(xp, wasOverdue) {
+    const todayStr = new Date().toISOString().slice(0, 10);
+    const yesterdayStr = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
+    try {
+      await db.runTransaction(async (tx) => {
+        const snap = await tx.get(gamificationRef);
+        const data = snap.exists ? snap.data() : { xp: 0, streak: 0, last_completed_date: null, completed_count: 0, overdue_cleared: 0 };
+        let newStreak = data.streak || 0;
+        if (data.last_completed_date === todayStr) {
+          // already logged a completion today, streak doesn't change again
+        } else if (data.last_completed_date === yesterdayStr) {
+          newStreak += 1;
+        } else {
+          newStreak = 1;
+        }
+        tx.set(gamificationRef, {
+          xp: (data.xp || 0) + xp,
+          streak: newStreak,
+          last_completed_date: todayStr,
+          completed_count: (data.completed_count || 0) + 1,
+          overdue_cleared: (data.overdue_cleared || 0) + (wasOverdue ? 1 : 0)
+        }, { merge: true });
+      });
+    } catch (e) {
+      console.error('Could not award XP', e);
+    }
+  }
+
+  // --- Custom tasks: live from Firestore, merged with Classroom assignments ---
+  function computePriorityScoreJS(weight, daysUntilDue) {
+    if (daysUntilDue < 0) return Math.round(weight * 5 * 10) / 10;
+    const urgency = 1 / Math.max(daysUntilDue, 0.25);
+    return Math.round(weight * urgency * 10) / 10;
+  }
+
+  function formatDueDate(ts) {
+    const d = new Date(ts * 1000);
+    const pad = n => String(n).padStart(2, '0');
+    return `${d.getUTCFullYear()}-${pad(d.getUTCMonth() + 1)}-${pad(d.getUTCDate())} ${pad(d.getUTCHours())}:${pad(d.getUTCMinutes())} UTC`;
+  }
+
+  function taskDocToAssignment(doc) {
+    const data = doc.data();
+    const nowTs = Date.now() / 1000;
+    const daysUntilDue = (data.due_timestamp - nowTs) / 86400;
+    const completed = !!data.completed;
+    let status;
+    if (completed) status = 'submitted';
+    else if (daysUntilDue < 0) status = 'overdue';
+    else if (daysUntilDue <= 1) status = 'urgent';
+    else if (daysUntilDue <= 7) status = 'upcoming';
+    else status = 'later';
+
+    return {
+      id: doc.id,
+      title: data.title || 'Untitled task',
+      course_name: data.subject || 'Personal',
+      due_date: formatDueDate(data.due_timestamp),
+      days_until_due: Math.round(daysUntilDue * 10) / 10,
+      status,
+      weight: data.xp || 10,
+      priority_score: completed ? 0 : computePriorityScoreJS(data.xp || 10, daysUntilDue),
+      source: 'custom'
+    };
+  }
+
+  function recombineAssignments() {
+    allAssignments = baseAssignments.concat(customTasks);
+    render();
+  }
+
+  customTasksRef.onSnapshot(
+    (snapshot) => { customTasks = snapshot.docs.map(taskDocToAssignment); recombineAssignments(); },
+    (err) => console.warn('Custom tasks listener error', err)
+  );
+
+  async function completeTask(taskId, xp, wasOverdue) {
+    try {
+      await customTasksRef.doc(taskId).update({ completed: true, completed_at: new Date().toISOString() });
+      await awardXP(xp, wasOverdue);
+      showToast(`+${xp} XP earned!`);
+    } catch (e) {
+      console.error(e);
+      alert('Could not mark that task complete: ' + e.message);
+    }
+  }
+
+  // --- Add Task modal ---
+  const taskModal = document.getElementById('task-modal');
+  document.getElementById('add-task-btn').addEventListener('click', () => {
+    const today = new Date().toISOString().slice(0, 10);
+    document.getElementById('task-date').value = today;
+    taskModal.classList.add('open');
+    document.getElementById('task-title').focus();
+  });
+  document.getElementById('task-cancel').addEventListener('click', () => taskModal.classList.remove('open'));
+  taskModal.addEventListener('click', (e) => { if (e.target === taskModal) taskModal.classList.remove('open'); });
+
+  document.getElementById('task-submit').addEventListener('click', async () => {
+    const title = document.getElementById('task-title').value.trim();
+    const subject = document.getElementById('task-subject').value.trim();
+    const dateVal = document.getElementById('task-date').value;
+    const timeVal = document.getElementById('task-time').value || '23:59';
+    const xp = parseInt(document.getElementById('task-xp').value, 10) || 10;
+
+    if (!title || !dateVal) {
+      alert('Please give the task a title and a due date.');
+      return;
+    }
+
+    const dueDateObj = new Date(`${dateVal}T${timeVal}:00`);
+    const dueTimestamp = Math.floor(dueDateObj.getTime() / 1000);
+
+    try {
+      await customTasksRef.add({
+        title, subject, due_timestamp: dueTimestamp, xp, completed: false,
+        created_at: new Date().toISOString()
+      });
+      taskModal.classList.remove('open');
+      document.getElementById('task-title').value = '';
+      document.getElementById('task-subject').value = '';
+      document.getElementById('task-xp').value = 10;
+    } catch (e) {
+      console.error(e);
+      alert('Could not save that task: ' + e.message);
+    }
+  });
+
   function escapeHTML(str) {
     const div = document.createElement('div');
     div.textContent = str == null ? '' : String(str);
     return div.innerHTML;
+  }
+  function escapeAttr(str) {
+    return escapeHTML(str).replace(/'/g, '&#39;');
   }
 
   async function loadData() {
@@ -218,7 +605,7 @@
   }
 
   function showLoadFallback() {
-    document.getElementById('content').innerHTML = `
+    document.getElementById('page-dashboard').innerHTML = `
       <div class="empty">
         <p>Couldn't load <code>dashboard_data.json</code> automatically. Browsers block this when a page is opened straight from disk.</p>
         <p>Run <code>python -m http.server</code> in your project folder and open this page at localhost:8000, or choose the file below.</p>
@@ -239,13 +626,13 @@
   });
 
   function onDataLoaded(data) {
-    allAssignments = data.assignments || [];
+    baseAssignments = data.assignments || [];
     pipelineStatus = data.pipeline_status || {};
     history = data.history || [];
     const synced = new Date(data.generated_at);
     document.getElementById('synced-label').textContent =
-      'Last synced ' + synced.toLocaleString(undefined, { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
-    render();
+      'Synced ' + synced.toLocaleString(undefined, { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
+    recombineAssignments();
   }
 
   function getVisible() {
@@ -253,8 +640,26 @@
     let list = activeFilter === 'all' ? allAssignments : allAssignments.filter(a => a.status === activeFilter);
     if (activeCourse !== 'all') list = list.filter(a => a.course_name === activeCourse);
     if (q) list = list.filter(a => (a.title || '').toLowerCase().includes(q) || (a.course_name || '').toLowerCase().includes(q));
-    return list.slice().sort((a, b) =>
-      sortMode === 'priority' ? b.priority_score - a.priority_score : a.days_until_due - b.days_until_due);
+    return list.slice().sort((a, b) => {
+      if (sortMode === 'priority') return b.priority_score - a.priority_score;
+      if (sortMode === 'xp') return b.weight - a.weight;
+      return a.days_until_due - b.days_until_due;
+    });
+  }
+
+  function cardRow(a) {
+    return `
+      <div class="card status-${a.status}">
+        <div class="card-main">
+          <div class="card-title">${escapeHTML(a.title)}</div>
+          <div class="card-meta">${escapeHTML(a.course_name)}, ${a.weight} ${a.source === 'custom' ? 'XP' : 'marks'}${a.status !== 'submitted' ? `, priority ${a.priority_score}` : ''}</div>
+        </div>
+        <div class="card-right">
+          <div class="card-due">${escapeHTML(a.due_date)}</div>
+          <span class="badge status-${a.status}">${STATUS_LABELS[a.status]}</span>
+          ${a.source === 'custom' && a.status !== 'submitted' ? `<button class="complete-btn" onclick="completeTask('${a.id}', ${a.weight}, ${a.status === 'overdue'})">COMPLETE</button>` : ''}
+        </div>
+      </div>`;
   }
 
   function cardsMarkup() {
@@ -262,19 +667,224 @@
     if (!visible.length) {
       return `<div class="empty"><p>${searchQuery.trim() ? 'No assignments match that search.' : 'Nothing in this filter.'}</p></div>`;
     }
-    return visible.map(a => `
-      <div class="card status-${a.status}">
-        <div class="card-main">
-          <div class="card-title">${escapeHTML(a.title)}</div>
-          <div class="card-meta">${escapeHTML(a.course_name)}, ${a.weight} marks${a.status !== 'submitted' ? `, priority ${a.priority_score}` : ''}</div>
-        </div>
-        <div class="card-right">
-          <div class="card-due">${escapeHTML(a.due_date)}</div>
-          <span class="badge status-${a.status}">${STATUS_LABELS[a.status]}</span>
-        </div>
-      </div>`).join('');
+    const classroomItems = visible.filter(a => a.source !== 'custom');
+    const personalItems = visible.filter(a => a.source === 'custom');
+
+    let out = '';
+    if (classroomItems.length) {
+      out += `<div class="quest-group-label">📚 CLASSROOM (${classroomItems.length})</div>` + classroomItems.map(cardRow).join('');
+    }
+    if (personalItems.length) {
+      out += `<div class="quest-group-label">✏️ PERSONAL TASKS (${personalItems.length})</div>` + personalItems.map(cardRow).join('');
+    }
+    return out;
   }
 
+  function computeCounts() {
+    const counts = {};
+    STATUS_ORDER.forEach(s => counts[s] = 0);
+    allAssignments.forEach(a => counts[a.status] = (counts[a.status] || 0) + 1);
+    return counts;
+  }
+
+  // --- Dashboard page: greeting, stat row, Today's Quests, Next Deadline + Upcoming, Overdue, Recent Achievement ---
+  function renderStatCards() {
+    const xp = gamiData.xp || 0;
+    const level = computeLevel(xp);
+    const xpIntoLevel = xp % 100;
+    const filledBlocks = Math.round(xpIntoLevel / 10);
+    const bar = '█'.repeat(filledBlocks) + '░'.repeat(10 - filledBlocks);
+    const todayStr = new Date().toISOString().slice(0, 10);
+    const questsToday = allAssignments.filter(a => a.status !== 'submitted' && (a.due_date || '').slice(0, 10) === todayStr).length;
+    const unlockedCount = ACHIEVEMENTS.filter(a => a.check(gamiData)).length;
+
+    return `<div class="stat-row">
+      <div class="stat-card"><div class="stat-card-label">⚡ LEVEL ${level}</div><div class="stat-card-value">${xp} XP</div><div class="xp-bar">${bar}</div></div>
+      <div class="stat-card"><div class="stat-card-label">🔥 STREAK</div><div class="stat-card-value">${gamiData.streak || 0} DAY${(gamiData.streak || 0) === 1 ? '' : 'S'}</div></div>
+      <div class="stat-card"><div class="stat-card-label">⚔ TODAY</div><div class="stat-card-value">${questsToday} QUEST${questsToday === 1 ? '' : 'S'}</div></div>
+      <div class="stat-card"><div class="stat-card-label">🏆 BADGES</div><div class="stat-card-value">${unlockedCount} / ${ACHIEVEMENTS.length}</div></div>
+    </div>`;
+  }
+
+  function renderTodaysQuests() {
+    const todayStr = new Date().toISOString().slice(0, 10);
+    const items = allAssignments.filter(a => a.status !== 'submitted' && (a.due_date || '').slice(0, 10) === todayStr)
+      .sort((a, b) => b.priority_score - a.priority_score);
+
+    if (!items.length) {
+      return `<div class="panel"><p class="section-title">⚔ TODAY'S QUESTS</p><p class="panel-note">Nothing due today — enjoy the breather.</p></div>`;
+    }
+
+    return `<div class="panel">
+      <div class="list-header" style="margin-bottom:12px"><p class="section-title" style="margin:0">⚔ TODAY'S QUESTS</p>
+        <span class="panel-note" style="margin:0">${items.length} QUEST${items.length === 1 ? '' : 'S'}</span></div>
+      ${items.map(a => `
+        <div class="quest-card">
+          <div class="quest-card-main">
+            <div class="quest-card-title">⚔ ${escapeHTML(a.title)}</div>
+            <div class="quest-card-sub">${escapeHTML(a.course_name)} · Due Today · ${escapeHTML((a.due_date || '').slice(11, 16))}</div>
+          </div>
+          <div class="quest-card-right">
+            <div class="quest-xp">+${a.weight} ${a.source === 'custom' ? 'XP' : 'MARKS'}</div>
+            ${a.source === 'custom'
+              ? `<button class="complete-btn" onclick="completeTask('${a.id}', ${a.weight}, ${a.status === 'overdue'})">COMPLETE</button>`
+              : `<span class="via-classroom">via Classroom</span>`}
+          </div>
+        </div>`).join('')}
+    </div>`;
+  }
+
+  function renderNextAndUpcoming() {
+    const pending = allAssignments.filter(a => a.status !== 'submitted');
+    const sorted = pending.slice().sort((a, b) => a.days_until_due - b.days_until_due);
+    const next = sorted[0];
+    const upcoming = sorted.slice(1, 6);
+
+    const nextCardHTML = next ? `
+      <div class="panel next-deadline-card">
+        <p class="section-title">🎯 NEXT DEADLINE</p>
+        <div class="next-title">${escapeHTML(next.title)}</div>
+        <div class="next-sub">${escapeHTML(next.course_name)}</div>
+        <div class="next-due">Due: ${escapeHTML(next.due_date)}</div>
+        <div class="next-xp">+${next.weight} ${next.source === 'custom' ? 'XP' : 'MARKS'}</div>
+        <button class="focus-start-btn" onclick="startFocusOn('${next.source === 'custom' ? next.id : ''}', '${escapeAttr(next.title)}', ${next.weight}, '${next.source}', ${next.status === 'overdue'})">▶ START FOCUS</button>
+      </div>` : `<div class="panel next-deadline-card"><p class="section-title">🎯 NEXT DEADLINE</p><p class="panel-note">Nothing pending — you're all caught up!</p></div>`;
+
+    const upcomingHTML = `<div class="panel">
+      <p class="section-title">📅 UPCOMING</p>
+      ${upcoming.length ? upcoming.map(a => `
+        <div class="upcoming-row">
+          <span class="upcoming-date">${escapeHTML((a.due_date || '').slice(5, 10))}</span>
+          <span class="upcoming-title">${escapeHTML(a.title)}</span>
+          <span class="upcoming-xp">+${a.weight}</span>
+        </div>`).join('') : `<p class="panel-note">Nothing further out yet.</p>`}
+      <button class="refresh-btn" style="margin-top:10px;width:100%" onclick="goToPage('quest')">VIEW ALL TASKS</button>
+    </div>`;
+
+    return `<div class="two-col">${nextCardHTML}${upcomingHTML}</div>`;
+  }
+
+  function renderOverdueSection() {
+    const overdue = allAssignments.filter(a => a.status === 'overdue');
+    if (!overdue.length) return '';
+    return `<div class="panel overdue-panel">
+      <p class="section-title" style="color:var(--overdue)">⚠ OVERDUE (${overdue.length})</p>
+      ${overdue.map(a => `
+        <div class="quest-card" style="border-left-color:var(--overdue)">
+          <div class="quest-card-main">
+            <div class="quest-card-title">${escapeHTML(a.title)}</div>
+            <div class="quest-card-sub">Was due ${escapeHTML(a.due_date)}</div>
+          </div>
+          <div class="quest-card-right">
+            ${a.source === 'custom'
+              ? `<button class="complete-btn" onclick="completeTask('${a.id}', ${a.weight}, true)">COMPLETE</button>`
+              : `<span class="via-classroom">via Classroom</span>`}
+          </div>
+        </div>`).join('')}
+    </div>`;
+  }
+
+  function renderRecentAchievement() {
+    const log = gamiData.achievements_log || [];
+    if (!log.length) return '';
+    const a = ACHIEVEMENTS.find(x => x.id === log[log.length - 1]);
+    if (!a) return '';
+    return `<div class="panel recent-achievement">
+      <p class="section-title">🏆 RECENT ACHIEVEMENT</p>
+      <div class="recent-ach-name">${a.icon} ${a.name.toUpperCase()}</div>
+      <p class="panel-note" style="margin:6px 0 0">${a.desc}.</p>
+    </div>`;
+  }
+
+  function renderDashboardPage() {
+    const el = document.getElementById('page-dashboard');
+    const greeting = `<div class="greeting-card">
+      <div class="greeting-title">${getGreeting()}, ${escapeHTML(getUserName())} 👋</div>
+      <div class="greeting-sub">Ready to clear your quests?</div>
+    </div>`;
+
+    if (!allAssignments.length) {
+      el.innerHTML = greeting + `<div class="empty"><p>No quests found yet. Run your pipeline, or add a personal task.</p></div>`;
+      return;
+    }
+
+    el.innerHTML = greeting + renderStatCards() + renderTodaysQuests() + renderNextAndUpcoming() + renderOverdueSection() + renderRecentAchievement();
+  }
+
+  // --- Focus Mode ---
+  function updateTimerDisplay() {
+    const m = Math.floor(timerSeconds / 60), s = timerSeconds % 60;
+    const disp = document.getElementById('timer-display');
+    if (disp) disp.textContent = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+  }
+  function startTimer() {
+    if (timerRunning) return;
+    timerRunning = true;
+    timerInterval = setInterval(() => {
+      if (timerSeconds <= 0) { clearInterval(timerInterval); timerRunning = false; showToast('⏰ Focus session complete!'); return; }
+      timerSeconds--; updateTimerDisplay();
+    }, 1000);
+  }
+  function pauseTimer() { clearInterval(timerInterval); timerRunning = false; }
+  function resetTimer() { clearInterval(timerInterval); timerRunning = false; timerSeconds = 25 * 60; updateTimerDisplay(); }
+
+  async function completeFocusTask() {
+    const sel = document.getElementById('focus-task-select');
+    if (!sel || !sel.value) { showToast('No quest selected.'); return; }
+    const [source, idOrTitle] = sel.value.split('::');
+    if (source === 'custom') {
+      const task = customTasks.find(t => t.id === idOrTitle);
+      if (task) await completeTask(task.id, task.weight, task.status === 'overdue');
+    } else {
+      await awardXP(15, false);
+      showToast('🎯 Focus session logged! (+15 XP — Classroom status syncs on next pipeline run)');
+    }
+    pauseTimer();
+  }
+
+  function startFocusOn(id, title, weight, source, wasOverdue) {
+    focusPreset = { id, title, weight, source, wasOverdue };
+    goToPage('focus');
+    renderFocusPage();
+  }
+
+  function renderFocusPage() {
+    const el = document.getElementById('page-focus');
+    const pendingOptions = allAssignments.filter(a => a.status !== 'submitted').sort((a, b) => a.days_until_due - b.days_until_due);
+
+    if (!pendingOptions.length) {
+      el.innerHTML = `<div class="panel focus-panel"><p class="section-title">⏱ FOCUS MODE</p><p class="panel-note">Nothing pending to focus on — you're all caught up!</p></div>`;
+      return;
+    }
+
+    const selectedKey = focusPreset ? (focusPreset.source + '::' + (focusPreset.id || focusPreset.title)) : (pendingOptions[0].source + '::' + (pendingOptions[0].id || pendingOptions[0].title));
+
+    el.innerHTML = `<div class="panel focus-panel">
+      <p class="section-title">⏱ FOCUS MODE</p>
+      <label style="display:block;font-size:1rem;color:var(--text-dim);margin-bottom:8px">Choose a quest</label>
+      <select class="sort-select" id="focus-task-select" style="width:100%;margin-bottom:18px">
+        ${pendingOptions.map(a => {
+          const key = a.source + '::' + (a.id || a.title);
+          return `<option value="${escapeAttr(key)}" ${key === selectedKey ? 'selected' : ''}>${escapeHTML(a.title)} (+${a.weight} ${a.source === 'custom' ? 'XP' : 'marks'})</option>`;
+        }).join('')}
+      </select>
+      <div class="timer-display" id="timer-display">25:00</div>
+      <div class="timer-controls">
+        <button class="focus-start-btn" id="timer-start-btn" style="flex:1">▶ START</button>
+        <button class="refresh-btn" id="timer-pause-btn">⏸ PAUSE</button>
+        <button class="refresh-btn" id="timer-reset-btn">⟲ RESET</button>
+      </div>
+      <button class="complete-btn" id="focus-complete-btn" style="margin-top:20px;width:100%;padding:12px;font-size:1.05rem">✔ COMPLETE QUEST</button>
+    </div>`;
+
+    document.getElementById('timer-start-btn').addEventListener('click', startTimer);
+    document.getElementById('timer-pause-btn').addEventListener('click', pauseTimer);
+    document.getElementById('timer-reset-btn').addEventListener('click', resetTimer);
+    document.getElementById('focus-complete-btn').addEventListener('click', completeFocusTask);
+    updateTimerDisplay();
+  }
+
+  // --- Quest Board page ---
   function renderTrendPanel() {
     const points = history
       .filter(h => typeof h.submitted_count === 'number' && typeof h.total_assignments === 'number')
@@ -283,7 +893,7 @@
                    submitted: h.submitted_count, date: new Date(h.generated_at) }));
 
     if (points.length < 2) {
-      return `<div class="panel"><p class="section-title">Progress over time</p>
+      return `<div class="panel"><p class="section-title">PROGRESS OVER TIME</p>
         <p class="panel-note">Each pipeline run saves a summary to Azure Blob Storage, and this chart reads them back. Run the pipeline once or twice more to start your trend.</p></div>`;
     }
 
@@ -296,7 +906,7 @@
     const label = d => `${d.getMonth() + 1}/${d.getDate()} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
 
     return `<div class="panel">
-      <p class="section-title">Progress over time</p>
+      <p class="section-title">PROGRESS OVER TIME</p>
       <p class="panel-note">Pending assignments per run, read back from Azure Blob Storage. Right now ${latest.submitted} of ${latest.total} are submitted (${pct}%).</p>
       <svg class="trend-svg" viewBox="0 0 ${W} ${H}" role="img" aria-label="Pending assignments across recent pipeline runs">
         <polyline points="${xy.map(pt => pt.x + ',' + pt.y).join(' ')}" fill="none" stroke-width="2.5" stroke-linejoin="round" style="stroke:var(--amber-glow)"/>
@@ -308,7 +918,7 @@
   }
 
   function renderPipelinePanel() {
-    return `<div class="panel"><p class="section-title">Cloud pipeline status</p><div class="status-grid">
+    return `<div class="panel"><p class="section-title">CLOUD PIPELINE STATUS</p><div class="status-grid">
       ${Object.keys(PIPELINE_LABELS).map(key => {
         const s = pipelineStatus[key] || { status: 'pending' };
         const dot = s.status === 'ok' ? 'ok' : s.status === 'error' ? 'error' : 'pending';
@@ -325,45 +935,17 @@
       }).join('')}</div></div>`;
   }
 
-  function render() {
-    const content = document.getElementById('content');
+  function renderQuestPage() {
+    const el = document.getElementById('page-quest');
     if (!allAssignments.length) {
-      content.innerHTML = `<div class="empty"><p>No assignments found. Run your pipeline to sync from Google Classroom.</p></div>` + renderPipelinePanel();
+      el.innerHTML = renderPipelinePanel();
       return;
     }
 
-    const pending = allAssignments.filter(a => a.status !== 'submitted');
-    const nextUp = pending.slice().sort((a, b) => a.days_until_due - b.days_until_due)[0];
-    const topPriority = pending.slice().sort((a, b) => b.priority_score - a.priority_score)[0];
-
-    const counts = {};
-    STATUS_ORDER.forEach(s => counts[s] = 0);
-    allAssignments.forEach(a => counts[a.status] = (counts[a.status] || 0) + 1);
+    const counts = computeCounts();
     const maxCount = Math.max(...Object.values(counts), 1);
 
-    const hero = nextUp ? `
-      <div class="hero">
-        <div class="hero-label">${nextUp.days_until_due < 0 ? 'Most recent overdue item, days late' : 'Next deadline'}</div>
-        <div class="hero-number">${Math.abs(Math.round(nextUp.days_until_due))}</div>
-        <div class="hero-sub">${nextUp.days_until_due < 0 ? 'days past' : 'days until'} <strong>${escapeHTML(nextUp.title)}</strong></div>
-        <div class="stats">
-          <div class="stat"><div class="stat-num">${counts.overdue}</div><div class="stat-label">Overdue</div></div>
-          <div class="stat"><div class="stat-num">${counts.urgent + counts.upcoming}</div><div class="stat-label">Due soon</div></div>
-          <div class="stat"><div class="stat-num">${counts.submitted}</div><div class="stat-label">Submitted</div></div>
-        </div>
-        ${topPriority && topPriority.title !== nextUp.title ? `
-          <div class="priority-callout">Highest priority right now (marks weighed against time left):
-            <span class="pc-title">${escapeHTML(topPriority.title)}</span>,
-            <strong>${topPriority.weight} marks</strong>, due in ${Math.round(topPriority.days_until_due)} day(s).</div>` : ''}
-      </div>` : `
-      <div class="hero">
-        <div class="hero-label">All caught up</div>
-        <div class="hero-number">0</div>
-        <div class="hero-sub">Nothing pending right now.</div>
-        <div class="stats"><div class="stat"><div class="stat-num">${counts.submitted}</div><div class="stat-label">Submitted</div></div></div>
-      </div>`;
-
-    const chart = `<div class="panel"><p class="section-title">Assignments by status</p>
+    const chart = `<div class="panel"><p class="section-title">ASSIGNMENTS BY STATUS</p>
       ${STATUS_ORDER.map(s => `<div class="bar-row"><div class="bar-label">${STATUS_LABELS[s]}</div>
         <div class="bar-track"><div class="bar-fill" style="width:${counts[s] / maxCount * 100}%; background:var(--${s})"></div></div>
         <div class="bar-count">${counts[s]}</div></div>`).join('')}</div>`;
@@ -371,16 +953,17 @@
     const courseNames = [...new Set(allAssignments.map(a => a.course_name))].sort();
 
     const header = `<div class="list-header">
-      <div class="section-title" style="margin:0">Assignments</div>
+      <div class="section-title" style="margin:0">QUEST BOARD</div>
       <div class="controls">
         <select class="sort-select" id="course-select" aria-label="Filter by subject">
           <option value="all">All subjects</option>
-          ${courseNames.map(c => `<option value="${escapeHTML(c)}">${escapeHTML(c)}</option>`).join('')}
+          ${courseNames.map(c => `<option value="${escapeAttr(c)}">${escapeHTML(c)}</option>`).join('')}
         </select>
         <input type="search" class="search-input" id="search-input" placeholder="Search title or course" aria-label="Search assignments">
         <select class="sort-select" id="sort-select" aria-label="Sort assignments">
           <option value="due">Sort by soonest due</option>
           <option value="priority">Sort by priority score</option>
+          <option value="xp">Sort by XP / marks</option>
         </select>
         <button class="refresh-btn" id="refresh-btn">Refresh</button>
       </div></div>
@@ -388,7 +971,7 @@
         ${['all', ...STATUS_ORDER].map(f => `<button class="filter-btn ${activeFilter === f ? 'active' : ''}" data-filter="${f}">${f === 'all' ? 'All' : STATUS_LABELS[f]}</button>`).join('')}
       </div>`;
 
-    content.innerHTML = hero + chart + renderTrendPanel() + renderPipelinePanel() + header + `<div id="cards">${cardsMarkup()}</div>`;
+    el.innerHTML = chart + renderTrendPanel() + renderPipelinePanel() + header + `<div id="cards">${cardsMarkup()}</div>`;
 
     const courseSelect = document.getElementById('course-select');
     courseSelect.value = activeCourse;
@@ -403,8 +986,13 @@
     sort.addEventListener('change', (e) => { sortMode = e.target.value; document.getElementById('cards').innerHTML = cardsMarkup(); });
 
     document.querySelectorAll('.filter-btn').forEach(btn =>
-      btn.addEventListener('click', () => { activeFilter = btn.dataset.filter; render(); }));
+      btn.addEventListener('click', () => { activeFilter = btn.dataset.filter; renderQuestPage(); }));
     document.getElementById('refresh-btn').addEventListener('click', loadData);
+  }
+
+  function render() {
+    renderDashboardPage();
+    renderQuestPage();
   }
 
   loadData();

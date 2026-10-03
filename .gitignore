@@ -3,5 +3,5 @@ token.json
 .env
 __pycache__/
 *.pyc
-.DS_Storeclassroom-deadline-tracker-firebase-adminsdk-fbsvc-cc3353a382.json
+.DS_Store
 classroom-deadline-tracker-firebase-adminsdk-fbsvc-cc3353a382.json

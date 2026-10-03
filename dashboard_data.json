@@ -1,12 +1,12 @@
 {
-  "generated_at": "2026-10-01T03:05:43.070468+00:00",
+  "generated_at": "2026-10-03T15:43:00.780013+00:00",
   "assignments": [
     {
       "title": "Exp 1 - Discuss and experiment Infrastructure as a Service using Microsoft Azure Compute / Amazon EC2 / Google Compute Engine.",
       "course_id": "863566662310",
       "course_name": "Cloud Application Development",
       "due_date": "2026-07-20 18:29 UTC",
-      "days_until_due": -72.4,
+      "days_until_due": -74.9,
       "status": "submitted",
       "weight": 10,
       "priority_score": 0
@@ -16,7 +16,7 @@
       "course_id": "863567057196",
       "course_name": "Computer Vision and Deep Learning",
       "due_date": "2026-07-30 18:10 UTC",
-      "days_until_due": -62.4,
+      "days_until_due": -64.9,
       "status": "submitted",
       "weight": 10,
       "priority_score": 0
@@ -26,7 +26,7 @@
       "course_id": "863566662310",
       "course_name": "Cloud Application Development",
       "due_date": "2026-07-31 18:29 UTC",
-      "days_until_due": -61.4,
+      "days_until_due": -63.9,
       "status": "submitted",
       "weight": 10,
       "priority_score": 0
@@ -36,7 +36,7 @@
       "course_id": "870758266592",
       "course_name": "TYBTECH-SEM V-Project Life Cycle Management",
       "due_date": "2026-08-03 18:29 UTC",
-      "days_until_due": -58.4,
+      "days_until_due": -60.9,
       "status": "submitted",
       "weight": 10,
       "priority_score": 0
@@ -46,7 +46,7 @@
       "course_id": "863566662310",
       "course_name": "Cloud Application Development",
       "due_date": "2026-08-07 18:29 UTC",
-      "days_until_due": -54.4,
+      "days_until_due": -56.9,
       "status": "submitted",
       "weight": 10,
       "priority_score": 0
@@ -56,7 +56,7 @@
       "course_id": "863567057196",
       "course_name": "Computer Vision and Deep Learning",
       "due_date": "2026-08-13 05:30 UTC",
-      "days_until_due": -48.9,
+      "days_until_due": -51.4,
       "status": "submitted",
       "weight": 10,
       "priority_score": 0
@@ -66,7 +66,7 @@
       "course_id": "863569830512",
       "course_name": "Enterprise Grade Connected Device Application: Self-Driving Cars",
       "due_date": "2026-08-13 18:29 UTC",
-      "days_until_due": -48.4,
+      "days_until_due": -50.9,
       "status": "submitted",
       "weight": 10,
       "priority_score": 0
@@ -76,7 +76,7 @@
       "course_id": "863569830512",
       "course_name": "Enterprise Grade Connected Device Application: Self-Driving Cars",
       "due_date": "2026-08-13 18:29 UTC",
-      "days_until_due": -48.4,
+      "days_until_due": -50.9,
       "status": "submitted",
       "weight": 10,
       "priority_score": 0
@@ -86,7 +86,7 @@
       "course_id": "863566662310",
       "course_name": "Cloud Application Development",
       "due_date": "2026-08-14 18:29 UTC",
-      "days_until_due": -47.4,
+      "days_until_due": -49.9,
       "status": "submitted",
       "weight": 10,
       "priority_score": 0
@@ -96,7 +96,7 @@
       "course_id": "863567057196",
       "course_name": "Computer Vision and Deep Learning",
       "due_date": "2026-08-19 03:55 UTC",
-      "days_until_due": -43.0,
+      "days_until_due": -45.5,
       "status": "submitted",
       "weight": 10,
       "priority_score": 0
@@ -106,7 +106,7 @@
       "course_id": "863568983745",
       "course_name": "Emerging Technologies",
       "due_date": "2026-08-20 18:29 UTC",
-      "days_until_due": -41.4,
+      "days_until_due": -43.9,
       "status": "submitted",
       "weight": 10,
       "priority_score": 0
@@ -116,7 +116,7 @@
       "course_id": "863568983745",
       "course_name": "Emerging Technologies",
       "due_date": "2026-08-20 18:29 UTC",
-      "days_until_due": -41.4,
+      "days_until_due": -43.9,
       "status": "submitted",
       "weight": 10,
       "priority_score": 0
@@ -126,7 +126,7 @@
       "course_id": "863566662310",
       "course_name": "Cloud Application Development",
       "due_date": "2026-08-21 18:29 UTC",
-      "days_until_due": -40.4,
+      "days_until_due": -42.9,
       "status": "submitted",
       "weight": 10,
       "priority_score": 0
@@ -136,7 +136,7 @@
       "course_id": "870758266592",
       "course_name": "TYBTECH-SEM V-Project Life Cycle Management",
       "due_date": "2026-08-24 12:29 UTC",
-      "days_until_due": -37.6,
+      "days_until_due": -40.1,
       "status": "submitted",
       "weight": 10,
       "priority_score": 0
@@ -146,7 +146,7 @@
       "course_id": "863567057196",
       "course_name": "Computer Vision and Deep Learning",
       "due_date": "2026-08-27 06:29 UTC",
-      "days_until_due": -34.9,
+      "days_until_due": -37.4,
       "status": "submitted",
       "weight": 10,
       "priority_score": 0
@@ -156,7 +156,7 @@
       "course_id": "863567057196",
       "course_name": "Computer Vision and Deep Learning",
       "due_date": "2026-09-10 06:15 UTC",
-      "days_until_due": -20.9,
+      "days_until_due": -23.4,
       "status": "submitted",
       "weight": 10,
       "priority_score": 0
@@ -166,7 +166,7 @@
       "course_id": "863566662310",
       "course_name": "Cloud Application Development",
       "due_date": "2026-09-11 04:59 UTC",
-      "days_until_due": -19.9,
+      "days_until_due": -22.4,
       "status": "submitted",
       "weight": 10,
       "priority_score": 0
@@ -176,7 +176,7 @@
       "course_id": "863566662310",
       "course_name": "Cloud Application Development",
       "due_date": "2026-09-23 18:29 UTC",
-      "days_until_due": -7.4,
+      "days_until_due": -9.9,
       "status": "submitted",
       "weight": 10,
       "priority_score": 0
@@ -186,7 +186,7 @@
       "course_id": "863567057196",
       "course_name": "Computer Vision and Deep Learning",
       "due_date": "2026-09-24 06:29 UTC",
-      "days_until_due": -6.9,
+      "days_until_due": -9.4,
       "status": "submitted",
       "weight": 10,
       "priority_score": 0
@@ -196,7 +196,17 @@
       "course_id": "863568775850",
       "course_name": "TY.BTECH VOYAGER Reinforcement Learning and NLP",
       "due_date": "2026-09-29 18:29 UTC",
-      "days_until_due": -1.4,
+      "days_until_due": -3.9,
+      "status": "submitted",
+      "weight": 10,
+      "priority_score": 0
+    },
+    {
+      "title": "Assignment 8: CNN Image Classification",
+      "course_id": "863567057196",
+      "course_name": "Computer Vision and Deep Learning",
+      "due_date": "2026-10-01 06:29 UTC",
+      "days_until_due": -2.4,
       "status": "submitted",
       "weight": 10,
       "priority_score": 0
@@ -206,26 +216,26 @@
       "course_id": "863568983745",
       "course_name": "Emerging Technologies",
       "due_date": "2026-10-05 18:29 UTC",
-      "days_until_due": 4.6,
-      "status": "upcoming",
+      "days_until_due": 2.1,
+      "status": "submitted",
       "weight": 10,
-      "priority_score": 2.2
+      "priority_score": 0
     },
     {
       "title": "Mini-Project ( 20 Marks)",
       "course_id": "863566662310",
       "course_name": "Cloud Application Development",
       "due_date": "2026-10-16 18:29 UTC",
-      "days_until_due": 15.6,
+      "days_until_due": 13.1,
       "status": "later",
       "weight": 20,
-      "priority_score": 1.3
+      "priority_score": 1.5
     }
   ],
   "pipeline_status": {
     "google_classroom": {
       "status": "ok",
-      "assignments_synced": 22,
+      "assignments_synced": 23,
       "courses_synced": [
         "Enterprise Grade Connected Device Application: Self-Driving Cars",
         "TYBTECH-SEM V-Project Life Cycle Management",
@@ -234,33 +244,25 @@
         "TY.BTECH VOYAGER Reinforcement Learning and NLP",
         "Cloud Application Development"
       ],
-      "synced_at": "2026-10-01T03:05:37.117962+00:00"
+      "synced_at": "2026-10-03T15:42:55.764498+00:00"
     },
     "firestore": {
       "status": "ok",
-      "assignments_synced": 22,
+      "assignments_synced": 23,
       "note": "Real Firestore (Native mode), Firebase Spark plan"
     },
     "fcm_notifications": {
-      "status": "pending",
+      "status": "ok",
       "reminders_sent": 0,
-      "detail": "No device registered yet \u2014 enable reminders on the dashboard"
+      "detail": "Real push via Firebase Cloud Messaging"
     },
     "azure_blob": {
       "status": "ok",
-      "blob_name": "summary_20261001_030541.json",
+      "blob_name": "summary_20261003_154258.json",
       "container": "assignment-reports"
     }
   },
   "history": [
-    {
-      "generated_at": "2026-09-25T14:30:29.452063+00:00",
-      "total_assignments": 8,
-      "reminders_sent": 0,
-      "overdue_count": 7,
-      "upcoming_count": 0,
-      "blob_name": "summary_20260925_143030.json"
-    },
     {
       "generated_at": "2026-09-25T14:36:42.681530+00:00",
       "total_assignments": 8,
@@ -321,6 +323,33 @@
       "overdue_count": 1,
       "upcoming_count": 1,
       "blob_name": "summary_20261001_030541.json"
+    },
+    {
+      "generated_at": "2026-10-01T17:33:19.999199+00:00",
+      "total_assignments": 24,
+      "submitted_count": 21,
+      "reminders_sent": 0,
+      "overdue_count": 1,
+      "upcoming_count": 0,
+      "blob_name": "summary_20261001_173320.json"
+    },
+    {
+      "generated_at": "2026-10-03T09:36:59.079090+00:00",
+      "total_assignments": 24,
+      "submitted_count": 21,
+      "reminders_sent": 0,
+      "overdue_count": 1,
+      "upcoming_count": 0,
+      "blob_name": "summary_20261003_093659.json"
+    },
+    {
+      "generated_at": "2026-10-03T15:42:57.881552+00:00",
+      "total_assignments": 24,
+      "submitted_count": 22,
+      "reminders_sent": 0,
+      "overdue_count": 1,
+      "upcoming_count": 0,
+      "blob_name": "summary_20261003_154258.json"
     }
   ]
 }

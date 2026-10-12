@@ -2,6 +2,7 @@
 # 🎮 Deadline Desk
 
 A gamified student productivity dashboard that combines Google Classroom assignment tracking, cloud-powered reminders, personal task management, focus sessions, and subject-wise notes in a retro pixel-RPG interface.
+Only frontend deploy on pages, check it out here :https://techlearnermaitri.github.io/GoogleClassroomTracker/
 
 ## ✨ Features
 
